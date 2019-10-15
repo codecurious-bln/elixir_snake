@@ -21,9 +21,9 @@ defmodule Snake.Scene.GameOriginal do
     # calculate the transform that centers the snake in the viewport
     {:ok, %ViewPort.Status{size: {vp_width, vp_height}}} = ViewPort.info(viewport)
 
-    # tile dimensions, resulting in a 21x18 grid (0-indexed)
-    vp_tile_width = trunc(vp_width / @tile_size)
-    vp_tile_height = trunc(vp_height / @tile_size)
+    # dimensions of the grid (21x18 tiles, 0-indexed)
+    num_tiles_width = trunc(vp_width / @tile_size)
+    num_tiles_height = trunc(vp_height / @tile_size)
 
     # snake always starts centered
     snake_start_coords = {10, 9}
@@ -36,8 +36,8 @@ defmodule Snake.Scene.GameOriginal do
     # The entire game state will be held here
     state = %{
       viewport: viewport,
-      tile_width: vp_tile_width,
-      tile_height: vp_tile_height,
+      width: num_tiles_width,
+      height: num_tiles_height,
       graph: @graph,
       frame_count: 1,
       frame_timer: timer,
@@ -108,7 +108,7 @@ defmodule Snake.Scene.GameOriginal do
     |> maybe_die()
   end
 
-  defp move(%{tile_width: w, tile_height: h}, {pos_x, pos_y}, {vec_x, vec_y}) do
+  defp move(%{width: w, height: h}, {pos_x, pos_y}, {vec_x, vec_y}) do
     {rem(pos_x + vec_x + w, w), rem(pos_y + vec_y + h, h)}
   end
 
@@ -165,7 +165,7 @@ defmodule Snake.Scene.GameOriginal do
   defp maybe_eat_pellet(state, _), do: state
 
   # Place the pellet somewhere in the map. It should not be on top of the snake.
-  defp randomize_pellet(state = %{tile_width: w, tile_height: h}) do
+  defp randomize_pellet(state = %{width: w, height: h}) do
     pellet_coords = {
         Enum.random(0..(w-1)),
         Enum.random(0..(h-1)),
