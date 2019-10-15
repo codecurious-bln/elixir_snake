@@ -21,20 +21,14 @@ defmodule Snake.Scene.GameOriginal do
     # calculate the transform that centers the snake in the viewport
     {:ok, %ViewPort.Status{size: {vp_width, vp_height}}} = ViewPort.info(viewport)
 
-    # how many tiles can the viewport hold in each dimension?
+    # tile dimensions, resulting in a 21x18 grid (0-indexed)
     vp_tile_width = trunc(vp_width / @tile_size)
     vp_tile_height = trunc(vp_height / @tile_size)
 
     # snake always starts centered
-    snake_start_coords = {
-      trunc(vp_tile_width / 2),
-      trunc(vp_tile_height / 2)
-    }
+    snake_start_coords = {10, 9}
 
-    pellet_start_coords = {
-      vp_tile_width - 2,
-      trunc(vp_tile_height / 2)
-    }
+    pellet_start_coords = {5, 5}
 
     # start a very simple animation timer
     {:ok, timer} = :timer.send_interval(@frame_ms, :frame)
@@ -56,12 +50,13 @@ defmodule Snake.Scene.GameOriginal do
       },
     }
 
-    # Update the graph and push it to be rendered
+    # Update the graph
     graph =
       state.graph
       |> draw_score(state.score)
       |> draw_game_objects(state.objects)
 
+    # push the graph to be rendered
     {:ok, state, push: graph}
   end
 
