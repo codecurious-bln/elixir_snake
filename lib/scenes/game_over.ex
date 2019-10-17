@@ -9,7 +9,7 @@ defmodule Snake.Scene.GameOver do
   @graph Graph.build(font: :roboto, font_size: 36, clear_color: :black)
          |> text("Game Over!", @text_opts)
 
-  @game_scene Snake.Scene.Game
+  @game_scene Snake.Scene.Game6
 
   def init(score, opts) do
     viewport = opts[:viewport]
