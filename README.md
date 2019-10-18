@@ -1,4 +1,4 @@
-# Build a Snake game to learn elixir
+# Build a Snake game to learn Elixir
 
 This tutorial is about building a Snake game with Scenic to teach Elixir. 
 
@@ -6,7 +6,7 @@ The tutorial is heavily based on the following article: [Getting started with Sc
 
 # TODOs
 
-So far the tutorial is given as a set of files, see section **Files**. This needs to be fleshed out into a written tutorial.
+So far the tutorial is given as a set of files, see [Files](#files). This needs to be fleshed out into a written tutorial.
 
 We should also think about further reducing complexity. If we want to make changes to the game I would suggest to do so in the final version (i.e. in `lib/game6.ex`) first. We can then retrofit them to the other files.
 
