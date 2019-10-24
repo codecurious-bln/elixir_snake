@@ -44,7 +44,6 @@ defmodule Snake.Scene.Game1 do
   end
 
   def handle_info(:frame, %{frame_count: frame_count} = state) do
-
     {pellet_x, pellet_y} = get_in(state, [:objects, :pellet])
     new_pellet = {rem(pellet_x + 1, state.width), pellet_y}
     state = put_in(state, [:objects, :pellet], new_pellet)

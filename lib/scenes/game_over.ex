@@ -34,11 +34,12 @@ defmodule Snake.Scene.GameOver do
 
   # Prevent player from hitting any key instantly, starting a new game
   def handle_info(:end_cooldown, state) do
-    graph = state.graph
-          |> Graph.modify(:gameover, &text(&1, "Game Over!\n"
-                                            <> "You scored #{state.score}.\n"
-                                            <> "Press any key to try again.",
-                                           @text_opts))
+    graph =
+      state.graph
+      |> Graph.modify(
+        :gameover,
+        &text(&1, "Game Over!\n You scored #{state.score}.\n Press any key to try again.", @text_opts)
+      )
 
     {:noreply, %{state | on_cooldown: false, graph: graph}, push: graph}
   end

@@ -132,7 +132,7 @@ defmodule Snake.Scene.Game6 do
   end
 
   def update_score(state = %{score: score}) do
-    %{ state | score: score + 100}
+    %{state | score: score + 100}
   end
 
   def maybe_die(state = %{viewport: vp, objects: %{snake: %{body: body}}, score: score}) do
@@ -140,6 +140,7 @@ defmodule Snake.Scene.Game6 do
     if length(Enum.uniq(body)) < length(body) do
       ViewPort.set_root(vp, {@game_over_scene, score})
     end
+
     state
   end
 

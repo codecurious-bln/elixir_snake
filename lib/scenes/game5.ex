@@ -130,7 +130,7 @@ defmodule Snake.Scene.Game5 do
   end
 
   def update_score(state = %{score: score}) do
-    %{ state | score: score + 100}
+    %{state | score: score + 100}
   end
 
   #

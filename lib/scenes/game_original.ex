@@ -4,7 +4,6 @@ defmodule Snake.Scene.GameOriginal do
   alias Scenic.ViewPort
   import Scenic.Primitives, only: [rrect: 3, text: 3]
 
-
   # Constants
   @graph Graph.build(font: :roboto, font_size: 36)
   @tile_size 32
@@ -43,11 +42,14 @@ defmodule Snake.Scene.GameOriginal do
       frame_timer: timer,
       score: 0,
       # Game objects
-      objects: %{snake: %{body: [snake_start_coords],
-                          size: @snake_starting_size,
-                          direction: {1, 0}},
-                 pellet: pellet_start_coords
-      },
+      objects: %{
+        snake: %{
+          body: [snake_start_coords],
+          size: @snake_starting_size,
+          direction: {1, 0}
+        },
+        pellet: pellet_start_coords
+      }
     }
 
     # Update the graph
@@ -118,6 +120,7 @@ defmodule Snake.Scene.GameOriginal do
     if length(Enum.uniq(snake)) < length(snake) do
       ViewPort.set_root(vp, {@game_over_scene, score})
     end
+
     state
   end
 
@@ -152,9 +155,9 @@ defmodule Snake.Scene.GameOriginal do
     graph |> rrect({@tile_size, @tile_size, @tile_radius}, tile_opts)
   end
 
-    # We're on top of a pellet! :)
+  # We're on top of a pellet! :)
   defp maybe_eat_pellet(state = %{objects: %{pellet: pellet_coords}}, snake_head_coords)
-  when pellet_coords == snake_head_coords do
+       when pellet_coords == snake_head_coords do
     state
     |> randomize_pellet()
     |> add_score(@pellet_score)
@@ -167,8 +170,8 @@ defmodule Snake.Scene.GameOriginal do
   # Place the pellet somewhere in the map. It should not be on top of the snake.
   defp randomize_pellet(state = %{width: w, height: h}) do
     pellet_coords = {
-        Enum.random(0..(w-1)),
-        Enum.random(0..(h-1)),
+      Enum.random(0..(w - 1)),
+      Enum.random(0..(h - 1))
     }
 
     validate_pellet_coords(state, pellet_coords)
@@ -176,8 +179,9 @@ defmodule Snake.Scene.GameOriginal do
 
   # Keep trying until we get a valid position
   defp validate_pellet_coords(state = %{objects: %{snake: %{body: snake}}}, coords) do
-    if coords in snake, do: randomize_pellet(state),
-                        else: put_in(state, [:objects, :pellet], coords)
+    if coords in snake,
+      do: randomize_pellet(state),
+      else: put_in(state, [:objects, :pellet], coords)
   end
 
   # Increments the player's score.
