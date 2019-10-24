@@ -107,7 +107,7 @@ defmodule Snake.Scene.Game6 do
   defp move(%{width: w, height: h}, {pos_x, pos_y}, {vec_x, vec_y}) do
     x = rem(pos_x + vec_x + w, w)
     y = rem(pos_y + vec_y + h, h)
-    {x, y} |> IO.inspect
+    {x, y}
   end
 
   def maybe_eat_pellet(state = %{objects: %{pellet: pellet}}, snake_head) when pellet == snake_head do
