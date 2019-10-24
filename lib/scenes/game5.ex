@@ -41,14 +41,7 @@ defmodule Snake.Scene.Game5 do
       }
     }
 
-    # Update the graph
-    graph =
-      state.graph
-      |> draw_score(state.score)
-      |> draw_game_objects(state.objects)
-
-    # push the graph to be rendered
-    {:ok, state, push: graph}
+    {:ok, state}
   end
 
   # Keyboard controls
