@@ -4,13 +4,13 @@ This tutorial is about building a Snake game with Scenic to teach Elixir.
 
 The tutorial is heavily based on the following article: [Getting started with Scenic in Elixir — Crafting a simple snake game].
 
-# TODOs
+## TODOs
 
 So far the tutorial is given as a set of files, see [Files](#files). This needs to be fleshed out into a written tutorial.
 
 We should also think about further reducing complexity. If we want to make changes to the game I would suggest to do so in the final version (i.e. in `lib/game6.ex`) first. We can then retrofit them to the other files.
 
-# Setup
+## Setup
 
 Install Erlang and Elixir on your machine - the required versions can be found in the `.tool-versions` file:
 
@@ -18,40 +18,29 @@ Install Erlang and Elixir on your machine - the required versions can be found i
 
 _(In case you're using the [asdf version manager](https://github.com/asdf-vm/asdf), install the respective plugins for Erlang/Elixir and run `asdf install`.)_
 
-## Dependencies
+### Dependencies
 
 See https://github.com/boydm/scenic_new#install-prerequisites for details, including setup instructions for various other Linux flavors.
 
-### Mac OS
+#### Mac OS
 
 ```
 $ brew install glfw3 glew pkg-config
 ```
 
-### Ubuntu 18
+#### Ubuntu 18
 
 ```
 $ sudo apt-get install pkgconf libglfw3 libglfw3-dev libglew2.0 libglew-dev
 ```
 
-### Mix task `scenic.new`
+#### Mix task `scenic.new`
 
 `scenic.new`: Mix task to generate a Scenic starter application
 
 
 ```
 $ mix archive.install hex scenic_new
-```
-
-## Create App
-
-```
-$ mix scenic.new snake
-$ cd snake
-$ mix deps.get
-
-# test
-$ mix scenic.run
 ```
 
 ## Files
@@ -73,10 +62,22 @@ So far the tutorial is given as a set of files, slowly building up the game:
 
 Run the game either with `$ mix scenic.run`
 
+## Create a Scenic App
 
-# Concepts 
+Create a new scenic application from scratch:
 
-## Elxir Basics
+```
+$ mix scenic.new snake
+$ cd snake
+$ mix deps.get
+
+# test
+$ mix scenic.run
+```
+
+## Concepts 
+
+### Elxir Basics
 
 We need to explain some Elixir basics like the data structures we use. We should have a look at the [Elixir Girls Elixir Beginners Guide](https://elixirgirls.com/guides/elixir-beginners-guide.html) for this. 
 
@@ -95,7 +96,7 @@ A first collection things we need to explain (very incomplete):
 * event loop
 * ...
 
-## Grid
+### Grid
 
 The playing field is a grid of tiles, addressable like a coordinate system.
 
