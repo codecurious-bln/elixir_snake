@@ -12,38 +12,39 @@ We should also think about further reducing complexity. If we want to make chang
 
 ## Setup
 
-Install Erlang and Elixir on your machine - the required versions can be found in the `.tool-versions` file:
+Set up the project in order to view and run sample solutions for each step of the tutorial.
 
-    cat .tool-versions
+### Installation
 
-_(In case you're using the [asdf version manager](https://github.com/asdf-vm/asdf), install the respective plugins for Erlang/Elixir and run `asdf install`.)_
+1. Install Erlang and Elixir on your machine - the required versions can be found in the `.tool-versions` file:
 
-### Dependencies
+        cat .tool-versions
 
-See https://github.com/boydm/scenic_new#install-prerequisites for details, including setup instructions for various other Linux flavors.
+  _(In case you're using the [asdf version manager](https://github.com/asdf-vm/asdf), install the respective plugins for Erlang/Elixir and run `asdf install`.)_
 
-#### Mac OS
+1. Install Open GL libraries for _(for [scenic_new](https://github.com/boydm/scenic_new))_
 
-```
-$ brew install glfw3 glew pkg-config
-```
+  On macOS 🍏:
+        
+        brew install glfw3 glew pkg-config
 
-#### Ubuntu 18
+  On Ubuntu 18 🐧:
 
-```
-$ sudo apt-get install pkgconf libglfw3 libglfw3-dev libglew2.0 libglew-dev
-```
+        sudo apt-get install pkgconf libglfw3 libglfw3-dev libglew2.0 libglew-dev
 
-#### Mix task `scenic.new`
+  _(See https://github.com/boydm/scenic_new#install-prerequisites for details on other operating systems.)_
 
-`scenic.new`: Mix task to generate a Scenic starter application
+1. Install the `scenic.new` mix task _(Mix task to easily generate a Scenic app)_:
 
+        mix archive.install hex scenic_new
 
-```
-$ mix archive.install hex scenic_new
-```
+### Running
 
-## Files
+Run the game with:
+
+    mix scenic.run
+
+### Files
 
 * `lib/snake.ex` - starter application
 * `lib/game_original.ex` - original implementation from [Getting started with Scenic in Elixir — Crafting a simple snake game]
@@ -58,9 +59,6 @@ So far the tutorial is given as a set of files, slowly building up the game:
 * `lib/game5.ex` - Result of live-coding pellet eating.
 * `lib/game6.ex` - Final Game, implements dying.
 
-## Run
-
-Run the game either with `$ mix scenic.run`
 
 ## Create a Scenic App
 
