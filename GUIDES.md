@@ -81,16 +81,16 @@ Creating a new scenic application from scratch.
 
 Run the mix task to create a new Scenic project:
 
-    $ mix scenic.new snake
+    mix scenic.new snake
 
 Move into the newly created directory:
 
-    $ cd snake
+    cd snake
 
 Install the depedencies:
 
-    $ mix deps.get
+    mix deps.get
 
 Run the app to check everything is working:
 
-    $ mix scenic.run
+    mix scenic.run

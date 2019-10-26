@@ -1,6 +1,6 @@
 # Build a Snake game to learn Elixir
 
-This tutorial is about building a Snake game with Scenic to teach Elixir. 
+This tutorial is about building a Snake game with Scenic to teach Elixir.
 
 The tutorial is heavily based on the following article: [Getting started with Scenic in Elixir — Crafting a simple snake game].
 
@@ -20,31 +20,31 @@ Set up the project in order to view and run sample solutions for each step of th
 
 1. Install Erlang and Elixir on your machine - the required versions can be found in the `.tool-versions` file:
 
-        $ cat .tool-versions
+        cat .tool-versions
 
   _(In case you're using the [asdf version manager](https://github.com/asdf-vm/asdf), install the respective plugins for Erlang/Elixir and run `asdf install`.)_
 
 1. Install Open GL libraries for _(for [scenic_new](https://github.com/boydm/scenic_new))_
 
   On macOS 🍏:
-        
-        $ brew install glfw3 glew pkg-config
+
+         brew install glfw3 glew pkg-config
 
   On Ubuntu 18 🐧:
 
-        $ sudo apt-get install pkgconf libglfw3 libglfw3-dev libglew2.0 libglew-dev
+         sudo apt-get install pkgconf libglfw3 libglfw3-dev libglew2.0 libglew-dev
 
   _(See https://github.com/boydm/scenic_new#install-prerequisites for details on other operating systems.)_
 
 1. Install the `scenic.new` mix task _(Mix task to easily generate a Scenic app)_:
 
-        $ mix archive.install hex scenic_new
+         mix archive.install hex scenic_new
 
 ### Running
 
 Run the game with:
 
-    $ mix scenic.run
+    mix scenic.run
 
 ### Files
 
