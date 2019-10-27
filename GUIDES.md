@@ -2,11 +2,11 @@
 
 Material for building the workshop tutorial.
 
-## Concepts 
+## Concepts
 
-### Elxir Basics
+### Elixir Basics
 
-We need to explain some Elixir basics like the data structures we use. We should have a look at the [Elixir Girls Elixir Beginners Guide](https://elixirgirls.com/guides/elixir-beginners-guide.html) for this. 
+We need to explain some Elixir basics like the data structures we use. We should have a look at the [Elixir Girls Elixir Beginners Guide](https://elixirgirls.com/guides/elixir-beginners-guide.html) for this.
 
 A first collection things we need to explain (very incomplete):
 
