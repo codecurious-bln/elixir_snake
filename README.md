@@ -37,6 +37,12 @@ Set up the project in order to view and run sample solutions for each step of th
 1. Install the `scenic.new` mix task _(Mix task to easily generate a Scenic app)_:
 
         $ mix archive.install hex scenic_new
+        
+### Project dependencies
+
+Download the elixir dependencies from the project with:
+
+    $ mix deps.get
 
 ### Running
 
