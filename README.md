@@ -18,9 +18,7 @@ Set up the project in order to view and run sample solutions for each step of th
 
 ### Installation
 
-1. Install Erlang and Elixir on your machine - the required versions can be found in the `.tool-versions` file:
-
-        $ cat .tool-versions
+1. Install Erlang and Elixir on your machine. Scenic requires Erlang/OTP 21 (or newer) and Elixir 1.7 (or newer).
 
   _(In case you're using the [asdf version manager](https://github.com/asdf-vm/asdf), install the respective plugins for Erlang/Elixir and run `asdf install`.)_
 
