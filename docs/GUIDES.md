@@ -162,7 +162,7 @@ The `scenic_new` package also gives us a command to run our project:
 
 We should see a window similar to this:
 
-![TODO: add Sceenshot]()
+![sceenshot](images/01-scenic-new-screen.png)
 
 
 ### 2. Draw a worm
