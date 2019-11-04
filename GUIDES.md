@@ -73,7 +73,17 @@ The playing field is a grid of tiles, addressable like a coordinate system.
    │ 0│ 1│ 2│ 3│ 4│ 5│ 6│ 7│ 8│ 9│10│11│12│13│14│15│16│17│18│19│20│
 </pre>
 
-## Writing Code
+## Tutorial
+
+### 1. Create a scenic app
+### 2. Draw a worm
+### 3. Let the worm move
+### 4. Add food for the worm
+### 5. Control worm movement
+### 6. Allow worm to eat
+### 7. Allow worm to die
+### 8. Add static score
+### 9. Add live scoring
 
 ### Create a Scenic App
 
