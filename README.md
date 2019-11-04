@@ -4,7 +4,7 @@ This tutorial is about building a Snake game with Scenic to teach Elixir.
 
 The tutorial is heavily based on the following article: [Getting started with Scenic in Elixir — Crafting a simple snake game].
 
-See the [guides](./GUIDES.md) for the workshop material.
+See the [guides](./docs/GUIDES.md) for the workshop material.
 
 ## TODOs
 

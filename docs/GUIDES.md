@@ -85,6 +85,7 @@ The playing field is a grid of tiles, addressable like a coordinate system.
 - install the `scenic_new` mix task
   - install an archive locally
 
+
 Navigate into your personal projects directory or wherever else you want to keep the application.
 
 ### 1. Create a scenic app
