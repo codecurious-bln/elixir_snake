@@ -96,7 +96,7 @@ The `scenic_new` package gives us the handy `scenic.new` task which can be used 
 
 The task makes some assumptions about the typical structure of a Scenic application.
 It will generate a skeleton for our snake app with all directories and files already in place.
-This is "boilderplate" code we would otherwise need to write by hand.
+This is "boilerplate" code we would otherwise need to write by hand.
 
 Run this in you terminal:
 
@@ -125,9 +125,9 @@ You will see output like this:
     You can also run it interactively like this:
         $ iex -S mix
 
-We see it generated some files inside a new `snake` folder and gives us hints what we can do next.
+We see it generated some files inside a new `snake` folder and gives us hints about what we can do next.
 
-Fist, we need to Navigate into our new project directory:
+First, we need to Navigate into our new project directory:
 
     $ cd snake
 
