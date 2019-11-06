@@ -127,7 +127,7 @@ You will see output like this:
 
 We see it generated some files inside a new `snake` folder and gives us hints about what we can do next.
 
-First, we need to Navigate into our new project directory:
+First, we need to navigate into our new project directory:
 
     $ cd snake
 
