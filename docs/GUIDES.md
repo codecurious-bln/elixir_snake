@@ -40,13 +40,9 @@ Navigate into your personal projects directory or wherever else you want to keep
 
 ### 1. Create a scenic app
 
-First off we need to create a new Scenic application using our previously installed `scenic_new` mix task.
-We are going to build a snake game, so let's call our project `snake`.
-The `scenic_new` package gives us the handy `scenic.new` task which can be used to bootstrap a new Scenic application.
+First off we need to create a new Scenic application using our previously installed `scenic_new` mix task. We are going to build a snake game, so let's call our project `snake`. The `scenic_new` package gives us the handy `scenic.new` task which can be used to bootstrap a new Scenic application.
 
-The task makes some assumptions about the typical structure of a Scenic application.
-It will generate a skeleton for our snake app with all directories and files already in place.
-This is "boilerplate" code we would otherwise need to write by hand.
+The task makes some assumptions about the typical structure of a Scenic application. It will generate a skeleton for our snake app with all directories and files already in place. This is "boilerplate" code we would otherwise need to write by hand.
 
 Run this in you terminal:
 
@@ -87,9 +83,7 @@ Let's see what we got:
 
 We will have a look at the `mix.exs` file - open the file in your editor.
 
-This file contains some core information about our project.
-There is a `deps` section at the bottom of the file listing the dependencies needed for running the project.
-The dependencies are other Elixir libraries, hosted as "hex" packages on [hex.pm](https://hex.pm)
+This file contains some core information about our project. There is a `deps` section at the bottom of the file listing the dependencies needed for running the project. The dependencies are other Elixir libraries, hosted as "hex" packages on [hex.pm](https://hex.pm)
 
 > Coach: talks about hex and package managers
 
@@ -105,8 +99,7 @@ To run the app, we need install the listed libraries.
 
     $ mix deps.get
 
-Now we are ready to run new Scenic project and check that everything is working 🤞.
-The `scenic_new` package also gives us a command to run our project:
+Now we are ready to run new Scenic project and check that everything is working 🤞. The `scenic_new` package also gives us a command to run our project:
 
     $ mix scenic.run
 
