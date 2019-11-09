@@ -25,15 +25,18 @@ A first collection things we need to explain (very incomplete):
 
 ## Tutorial
 
-We want to learn more about the [Elixir](https://elixir-lang.org) programming language by building a fun game together: **snake** - a cult game from mobile phones in the 90s 🕹
+We want to learn more about the [Elixir](https://elixir-lang.org) programming language by building a fun game together: **snake** - a cult game from mobile phones in the 1990s 🕹
 
 ![snake game on a nokia phone](https://media.giphy.com/media/ZYOybCzZvpcY0/giphy.gif)
 
 The game works as follows:  
 > The player controls a moving snake which has to "eat" as many items as possible by running into them with its head. Each item makes the snake grow longer and the game is lost when the head runs into the tail.
 
+We will implement the game using [Scenic](https://github.com/boydm/scenic), a library for building native macOS or Linux applications with graphical user interfaces in Elixir.
 
-- explain what Scenic is
+So let's build a fun game together!
+
+
 - explain what `mix` is
   - run `mix help` to see what commands are available and what they do
   - use mix as a task runner here (compare to npm, yarn)
