@@ -25,7 +25,13 @@ A first collection things we need to explain (very incomplete):
 
 ## Tutorial
 
-### 0. Prerequisites
+We want to learn more about the [Elixir](https://elixir-lang.org) programming language by building a fun game together: **snake** - a cult game from mobile phones in the 90s 🕹
+
+![snake game on a nokia phone](https://media.giphy.com/media/ZYOybCzZvpcY0/giphy.gif)
+
+The game works as follows:  
+> The player controls a moving snake which has to "eat" as many items as possible by running into them with its head. Each item makes the snake grow longer and the game is lost when the head runs into the tail.
+
 
 - explain what Scenic is
 - explain what `mix` is
@@ -34,6 +40,11 @@ A first collection things we need to explain (very incomplete):
     - rake is only a task runner
 - install the `scenic_new` mix task
   - install an archive locally
+
+
+### 0. Prerequisites
+
+- make sure all tools are set up
 
 
 Navigate into your personal projects directory or wherever else you want to keep the application.
