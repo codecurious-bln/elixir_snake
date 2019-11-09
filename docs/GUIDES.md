@@ -36,25 +36,33 @@ We will implement the game using [Scenic](https://github.com/boydm/scenic), a li
 
 So let's build a fun game together!
 
+### 0. Getting ready
 
-- explain what `mix` is
-  - run `mix help` to see what commands are available and what they do
-  - use mix as a task runner here (compare to npm, yarn)
-    - rake is only a task runner
-- install the `scenic_new` mix task
-  - install an archive locally
+We first need to make sure we have Elixir installed on our computer. [Installing Elixir](https://elixir-lang.org/install.html) has installation instructions for all tastes and operating systems.
 
+Once installed, check the version by running this command in your terminal:
 
-### 0. Prerequisites
+    $ elixir --version
 
-- make sure all tools are set up
+If your version is lower than `1.9.x`, either update to a more recent version or ask a coach for help.
 
+Next we'll install some `mix` tasks to help us build a `Scenic` application. [mix](https://hexdocs.pm/mix/Mix.html) is a tool that comes with Elixir to help developing apps and manage their dependencies. It it similar to e.g. `npm` in JavaScript (don't worry if you don't know that).
 
-Navigate into your personal projects directory or wherever else you want to keep the application.
+The tasks in the `scenic_new` archive have some prerequisites. Head to the [instructions](https://github.com/boydm/scenic_new#install-prerequisites) for your operating system and install them first.and find the instructions for your operating system.
+
+The `scenic_new` tasks require some additional libraries installed on your computer. See the [install prerequisites](https://github.com/boydm/scenic_new#install-prerequisites) for installation instructions for your operating system.
+
+Once everything is set up, you can install the tasks via `mix`:
+
+    $ mix archive.install hex scenic_new
+
+Now we are prepared to start building our Scenic application!
+
+Navigate into your personal projects directory _(or wherever you want to keep the files for the tutorial)_ and then let's get started 🚀
 
 ### 1. Create a scenic app
 
-First off we need to create a new Scenic application using our previously installed `scenic_new` mix task. We are going to build a snake game, so let's call our project `snake`. The `scenic_new` package gives us the handy `scenic.new` task which can be used to bootstrap a new Scenic application.
+First off we'll to create a new Scenic application using our previously installed `scenic_new` mix task. We are building a snake game, so let's call our project `snake`. The `scenic_new` package gives us the handy `scenic.new` task which can be used to bootstrap a new Scenic application.
 
 The task makes some assumptions about the typical structure of a Scenic application. It will generate a skeleton for our snake app with all directories and files already in place. This is "boilerplate" code we would otherwise need to write by hand.
 
