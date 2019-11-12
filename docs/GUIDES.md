@@ -48,9 +48,7 @@ If your version is lower than `1.9.x`, either update to a more recent version or
 
 Next, we'll install some `mix` tasks to help us build a `Scenic` application. [mix](https://hexdocs.pm/mix/Mix.html) is a tool that comes with Elixir to help developing apps and manage their dependencies. It is similar to e.g. `npm` in JavaScript (don't worry if you don't know that).
 
-The tasks in the `scenic_new` archive have some prerequisites. Head to the [instructions](https://github.com/boydm/scenic_new#install-prerequisites) for your operating system and install them first.and find the instructions for your operating system.
-
-The `scenic_new` tasks require some additional libraries installed on your computer. See the [install prerequisites](https://github.com/boydm/scenic_new#install-prerequisites) for installation instructions for your operating system.
+Specifically, we will use the `scenic_new` tasks which require some additional libraries installed on your computer. See the [install prerequisites](https://github.com/boydm/scenic_new#install-prerequisites) for installation instructions for your operating system.
 
 Once everything is set up, you can install the tasks via `mix`:
 
