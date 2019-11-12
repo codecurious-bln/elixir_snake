@@ -46,7 +46,7 @@ Once installed, check the version by running this command in your terminal:
 
 If your version is lower than `1.9.x`, either update to a more recent version or ask a coach for help.
 
-Next we'll install some `mix` tasks to help us build a `Scenic` application. [mix](https://hexdocs.pm/mix/Mix.html) is a tool that comes with Elixir to help developing apps and manage their dependencies. It it similar to e.g. `npm` in JavaScript (don't worry if you don't know that).
+Next, we'll install some `mix` tasks to help us build a `Scenic` application. [mix](https://hexdocs.pm/mix/Mix.html) is a tool that comes with Elixir to help developing apps and manage their dependencies. It is similar to e.g. `npm` in JavaScript (don't worry if you don't know that).
 
 The tasks in the `scenic_new` archive have some prerequisites. Head to the [instructions](https://github.com/boydm/scenic_new#install-prerequisites) for your operating system and install them first.and find the instructions for your operating system.
 
@@ -62,7 +62,7 @@ Navigate into your personal projects directory _(or wherever you want to keep th
 
 ### 1. Create a scenic app
 
-First off we'll to create a new Scenic application using our previously installed `scenic_new` mix task. We are building a snake game, so let's call our project `snake`. The `scenic_new` package gives us the handy `scenic.new` task which can be used to bootstrap a new Scenic application.
+First off we'll create a new Scenic application using our previously installed `scenic_new` mix task. We are building a snake game, so let's call our project `snake`. The `scenic_new` package gives us the handy `scenic.new` task which can be used to bootstrap a new Scenic application.
 
 The task makes some assumptions about the typical structure of a Scenic application. It will generate a skeleton for our snake app with all directories and files already in place. This is "boilerplate" code we would otherwise need to write by hand.
 
