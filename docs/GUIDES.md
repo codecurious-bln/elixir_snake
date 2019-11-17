@@ -130,7 +130,7 @@ We should see a window similar to this:
 
 ### 2. Draw a worm
 
-Our playing field is a grid of tiles, addressable like a coordinate system:
+As we are building a retro game, our playing field is a grid of cells, addressable like a coordinate system:
 
 * x-Axis: 21 Tiles (tile 0 to 20)
 * y-Axis: 18 Tiles (tile 0 to 17)
@@ -177,7 +177,241 @@ Our playing field is a grid of tiles, addressable like a coordinate system:
    │ 0│ 1│ 2│ 3│ 4│ 5│ 6│ 7│ 8│ 9│10│11│12│13│14│15│16│17│18│19│20│
 ```
 
+- the whole game operates in a predefined grid:
+  - snake an food for the snake will be drawn as filled boxes in the grid
+  - movement only along the predefined grid
+- in Scenic terms, our game will be a "scene"
+  - see https://hexdocs.pm/scenic/overview_general.html#architecture
+  - terms and definitions for Scenic: https://hexdocs.pm/scenic/overview_general.html#terms-and-definitions
+  - scenes are like web pages:
+    - every scene is a `GenServer` process containing state and the business logic to handle user input
+    - navigating to different screens means navigate to different "scenes"
+  - for our game, one scene is enough for the start as we won't navigate anywhere else
+- start by building a new "scene" in `lib/scenes/game.ex`
+
+    ```elixir
+    defmodule Snake.Scene.Game do
+      use Scenic.Scene
+    end
+    ```
+- every scene must implement `init/2` callback
+  - takes two arguments: first passed in by whoever starts the scene, second contextual options (e.g. viewport)
+
+  ```elixir
+  # initialize the game scene
+  def init(arg, opts) do
+
+  end
+  ```
+- run the game: nothing changed!
+- we need to update the config: in `snake/config/config.exs`
+  - change default scene to our game scene
+
+    ```elixir
+    default_scene: {Snake.Scene.Game, nil},
+    ```
+- outcome: completely empty scene
+  - TODO: add sceenshot
+
+- `nil` as the 2nd element in the tuple is what our `init/2` function receives as `arg`
+  - since we're not using it, we could prefix it now...
+- put together information for the game in the "state"
+- scene is a `GenServer`: will maintain `state` during its lifetime
+  - state needs to hold everything the scene needs to work
+- set up viewport for scene
+- we can get information about the view port so then assemble our grid accordingly
+
+  ```elixir
+  defmodule Snake.Scene.Game do
+    use Scenic.Scene
+
+    alias Scenic.ViewPort
+
+    # initialize the game scene
+    def init(arg, opts) do
+      viewport = opts[:viewport]
+
+      IO.inspect(ViewPort.info(viewport), label: "viewport info")
+    end
+  end
+  ```
+
+- dumps some info about the scene
+  - we can find out about the size in pixels of our window and from that calculate how many cells we can fit
+- set up grid system:
+
+  ```elixir
+  @tile_size 32
+
+  def init(arg, opts) do
+    viewport = opts[:viewport]
+
+    {:ok, %ViewPort.Status{size: {vp_width, vp_height}}} = ViewPort.info(viewport)
+
+    # dimensions of the grid (21x18 tiles, 0-indexed)
+    num_tiles_width = trunc(vp_width / @tile_size)
+    num_tiles_height = trunc(vp_height / @tile_size)
+
+    # the entire game state will be held here
+    state = %{
+      viewport: viewport,
+      width: num_tiles_width,
+      height: num_tiles_height
+    }
+  end
+  ```
+
+- important concept in Scenic: "graph"
+  - graph like DOM: hierarchical set of data that describes how things are drawn onto the scene
+  - graph is immutable and can only be "transformed" via functions
+- set up initial graph at compile time since we're updating all the time anyways:
+
+  ```elixir
+  alias Scenic.ViewPort
+  alias Scenic.Graph
+
+  @graph Graph.build()
+  @tile_size 32
+
+  # initialize the game scene
+  def init(arg, opts) do
+    viewport = opts[:viewport]
+
+    {:ok, %ViewPort.Status{size: {vp_width, vp_height}}} = ViewPort.info(viewport)
+
+    # dimensions of the grid (21x18 tiles, 0-indexed)
+    num_tiles_width = trunc(vp_width / @tile_size)
+    num_tiles_height = trunc(vp_height / @tile_size)
+
+    # the entire game state will be held here
+    state = %{
+      viewport: viewport,
+      width: num_tiles_width,
+      height: num_tiles_height
+    }
+  end
+  ```
+
+- return `{:ok, state}` from `init/2`:
+  
+  ```elixir
+  def init(arg, opts) do
+    viewport = opts[:viewport]
+
+    {:ok, %ViewPort.Status{size: {vp_width, vp_height}}} = ViewPort.info(viewport)
+
+    # dimensions of the grid (21x18 tiles, 0-indexed)
+    num_tiles_width = trunc(vp_width / @tile_size)
+    num_tiles_height = trunc(vp_height / @tile_size)
+
+    # the entire game state will be held here
+    state = %{
+      viewport: viewport,
+      width: num_tiles_width,
+      height: num_tiles_height
+    }
+
+    {:ok, state}
+  end
+  ```
+- optionally give it a more Nokia style feel:
+  - default background for the scene is black, but we can set the background like so:
+
+    ```elixir
+    @graph Graph.build(clear_color: :dark_sea_green)
+    ```
+
+- we need to add our graph to the scene to actually draw something
+- add information about game objects: how can we define a snake?
+  - we describe a snake via:
+  - body: a list of ordered x and y pairs. Each pair corresponds to a cell in the grid the snake is currently occupying
+  - size: the current size of the snake in cells
+
+  ```elixir
+  snake = %{body: [{9, 9}], size: 1}
+  ```
+
+- need to update the graph to actually draw something.
+
+  ```elixir
+  # the entire game state will be held here
+  state = %{
+    viewport: viewport,
+    width: num_tiles_width,
+    height: num_tiles_height
+  }
+
+  snake = %{body: [{9, 9}], size: 5}
+
+  # update the graph and push it to be rendered
+  graph =
+    @graph
+    |> draw_object(snake)
+
+  {:ok, state, push: graph}
+  ```
+- need to implement the function to draw our game object onto the scene:
+  - means: we add information to the graph on where to place what
+  - new function: `draw_game_object/2` takes graph and our snake objects (we will have more objects later)
+  - TODO: explain pipelines
+
+  ```elixir
+  defp draw_object(graph, %{body: snake}) do
+    Enum.reduce(snake, graph, fn {x, y}, graph ->
+      draw_tile(graph, x, y, fill: :blue)
+    end)
+  end
+  ```
+
+- match on the object we pass in (the snake)
+- TODO: explain matching on maps
+- snake essentially only a collection of tiles
+- add private function to fill a tile in our coordinate system:
+  - function takes graph and adds the respective rectangles that define our snake
+
+  ```elixir
+  # at top of file
+  import Scenic.Primitives, only: [rrect: 3]
+
+  # group with constants
+  @tile_radius 8
+
+  # draw tiles as rounded rectangles to look nice
+  defp draw_tile(graph, x, y, opts) do
+    tile_opts = Keyword.merge([fill: :white, translate: {x * @tile_size, y * @tile_size}], opts)
+    graph |> rrect({@tile_size, @tile_size, @tile_radius}, tile_opts)
+  end
+  ```
+
+- output: we only see a single dot...
+  - we aren't yet using the size information in our snake
+  - we are just drawing a single dot
+  - reason: our scene is updated only once when the game starts
+    - in order to move, we need update our scene more often (implement the actual game logic)
+- first: look at output: warning that we're not using the args argument:
+
+      warning: variable "arg" is unused (if the variable is not meant to be used, prefix it with an underscore)
+        lib/scenes/game.ex:14: Snake.Scene.Game.init/2
+
+- change this to be ignored intentionally by prepending underscore:
+
+  ```elixir
+  def init(_arg, opts) do
+  ```
+
+- we said snake is define through a set of coordinates: let's draw an actual snake that is more than a dot:
+
+  ```elixir
+  snake = %{body: [{9, 9}, {10, 9}, {11, 9}], size: 3}
+  ```
+
+
 ### 3. Let the worm move
+
+- TODO:
+  - explain game mechanics
+  - explain why we need to update with `handle_info/2`
+  - refactor game to be generic about drawing objects
 
 ### 4. Add food for the worm
 
