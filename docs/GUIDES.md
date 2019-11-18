@@ -178,7 +178,7 @@ As we are building a retro game, our playing field is a grid of cells, addressab
 ```
 
 - the whole game operates in a predefined grid:
-  - snake an food for the snake will be drawn as filled boxes in the grid
+  - snake and food for the snake will be drawn as filled boxes in the grid
   - movement only along the predefined grid
 - in Scenic terms, our game will be a "scene"
   - see https://hexdocs.pm/scenic/overview_general.html#architecture
@@ -219,7 +219,7 @@ As we are building a retro game, our playing field is a grid of cells, addressab
 - scene is a `GenServer`: will maintain `state` during its lifetime
   - state needs to hold everything the scene needs to work
 - set up viewport for scene
-- we can get information about the view port so then assemble our grid accordingly
+- we can get information about the view port to then assemble our grid accordingly
 
   ```elixir
   defmodule Snake.Scene.Game do
