@@ -248,163 +248,129 @@ def init(_arg, opts) do
 end
 ```
 
-- set up grid system:
+So let's use the view port information to set up our grid. We'll define the default length of 32 pixels for the edge of one square and then compute how many we can fit onto the screen. As this information is necessary throughout the whole game, we store it in the `state` of the scene.
 
-  ```elixir
-  @tile_size 32
+```elixir
+@tile_size 32
 
-  def init(_arg, opts) do
-    viewport = opts[:viewport]
+def init(_arg, opts) do
+  viewport = opts[:viewport]
 
-    {:ok, %ViewPort.Status{size: {vp_width, vp_height}}} = ViewPort.info(viewport)
+  {:ok, %ViewPort.Status{size: {vp_width, vp_height}}} = ViewPort.info(viewport)
 
-    # dimensions of the grid (21x18 tiles, 0-indexed)
-    num_tiles_width = trunc(vp_width / @tile_size)
-    num_tiles_height = trunc(vp_height / @tile_size)
+  num_tiles_width = trunc(vp_width / @tile_size)
+  num_tiles_height = trunc(vp_height / @tile_size)
 
-    # the entire game state will be held here
-    state = %{
-      viewport: viewport,
-      width: num_tiles_width,
-      height: num_tiles_height
-    }
-  end
-  ```
-
-- important concept in Scenic: "graph"
-  - graph like DOM: hierarchical set of data that describes how things are drawn onto the scene
-  - graph is immutable and can only be "transformed" via functions
-- set up initial graph at compile time since we're updating all the time anyways:
-
-  ```elixir
-  alias Scenic.ViewPort
-  alias Scenic.Graph
-
-  @graph Graph.build()
-  @tile_size 32
-
-  # initialize the game scene
-  def init(_arg, opts) do
-    viewport = opts[:viewport]
-
-    {:ok, %ViewPort.Status{size: {vp_width, vp_height}}} = ViewPort.info(viewport)
-
-    # dimensions of the grid (21x18 tiles, 0-indexed)
-    num_tiles_width = trunc(vp_width / @tile_size)
-    num_tiles_height = trunc(vp_height / @tile_size)
-
-    # the entire game state will be held here
-    state = %{
-      viewport: viewport,
-      width: num_tiles_width,
-      height: num_tiles_height
-    }
-  end
-  ```
-
-- return `{:ok, state}` from `init/2`:
-  
-  ```elixir
-  def init(_arg, opts) do
-    viewport = opts[:viewport]
-
-    {:ok, %ViewPort.Status{size: {vp_width, vp_height}}} = ViewPort.info(viewport)
-
-    # dimensions of the grid (21x18 tiles, 0-indexed)
-    num_tiles_width = trunc(vp_width / @tile_size)
-    num_tiles_height = trunc(vp_height / @tile_size)
-
-    # the entire game state will be held here
-    state = %{
-      viewport: viewport,
-      width: num_tiles_width,
-      height: num_tiles_height
-    }
-
-    {:ok, state}
-  end
-  ```
-- optionally give it a more Nokia style feel:
-  - default background for the scene is black, but we can set the background like so:
-
-    ```elixir
-    @graph Graph.build(clear_color: :dark_sea_green)
-    ```
-
-- we need to add our graph to the scene to actually draw something
-- add information about game objects: how can we define a snake?
-  - we describe a snake via:
-  - body: a list of ordered x and y pairs. Each pair corresponds to a cell in the grid the snake is currently occupying
-  - size: the current size of the snake in cells
-
-  ```elixir
-  snake = %{body: [{9, 9}], size: 1}
-  ```
-
-- need to update the graph to actually draw something.
-
-  ```elixir
-  # the entire game state will be held here
   state = %{
-    viewport: viewport,
+    width: num_tiles_width,
+    height: num_tiles_height
+  }
+end
+```
+
+Next we'll introduce the "graph" for our scene. The concept of a "graph" in Scenic is similar to the "DOM" in HTML: it a hierarchical description of the objects drawn onto the scene. Graphs are immutable and can only be transformed via functions. We'll set up the initial graph at compile time.
+
+> Coach: Talk about immutability in functional programming / Elixir.
+
+```elixir
+alias Scenic.ViewPort
+alias Scenic.Graph
+
+@graph Graph.build()
+@tile_size 32
+```
+
+Running the app, you won't see any change yet. We have to push our graph to the view port when we initialize the scene. We will also return the initial state we just set up:
+
+```elixir
+def init(_arg, opts) do
+  viewport = opts[:viewport]
+
+  {:ok, %ViewPort.Status{size: {vp_width, vp_height}}} = ViewPort.info(viewport)
+
+  num_tiles_width = trunc(vp_width / @tile_size)
+  num_tiles_height = trunc(vp_height / @tile_size)
+
+  state = %{
     width: num_tiles_width,
     height: num_tiles_height
   }
 
-  snake = %{body: [{9, 9}], size: 5}
+  {:ok, state, push: @graph}
+end
+```
 
-  # update the graph and push it to be rendered
-  graph =
-    @graph
-    |> draw_object(snake)
+Let's run the game!
 
-  {:ok, state, push: graph}
-  ```
-- need to implement the function to draw our game object onto the scene:
-  - means: we add information to the graph on where to place what
-  - new function: `draw_game_object/2` takes graph and our snake objects (we will have more objects later)
-  - TODO: explain pipelines
+Nothing changed? That's because our graph does not contain any objects yet and we did not give it any attributes differing from Scenic's defaults.
 
-  ```elixir
-  defp draw_object(graph, %{body: snake}) do
-    Enum.reduce(snake, graph, fn {x, y}, graph ->
-      draw_tile(graph, x, y, fill: :blue)
-    end)
-  end
-  ```
+Let's start by changing the default background of the scene from black to a more Nokia style color:
 
-- match on the object we pass in (the snake)
-- TODO: explain matching on maps
-- snake essentially only a collection of tiles
-- add private function to fill a tile in our coordinate system:
-  - function takes graph and adds the respective rectangles that define our snake
+```elixir
+@graph Graph.build(clear_color: :dark_sea_green)
+```
 
-  ```elixir
-  # at top of file
-  import Scenic.Primitives, only: [rrect: 3]
+Nice! We already get that 90s feeling.
 
-  # group with constants
-  @tile_radius 8
+The first object we want to draw on our scene is the snake. We'll define it as an ordered list of x and y coordinate pairs corresponding to the locations of the cells in the grid the snake is currently occupying. We'll refer to this as the "body" of the snake. In addition to that, we'll also add information about the current "size" of the snake. That should be enough to be able to draw the snake onto the scene:
 
-  # draw tiles as rounded rectangles to look nice
-  defp draw_tile(graph, x, y, opts) do
-    tile_opts = Keyword.merge([fill: :white, translate: {x * @tile_size, y * @tile_size}], opts)
-    graph |> rrect({@tile_size, @tile_size, @tile_radius}, tile_opts)
-  end
-  ```
+```elixir
+snake = %{body: [{9, 9}], size: 1}
+```
 
-- output: we only see a single dot...
-  - we aren't yet using the size information in our snake
-  - we are just drawing a single dot
-  - reason: our scene is updated only once when the game starts
-    - in order to move, we need update our scene more often (implement the actual game logic)
+In order to actually draw it onto the scene, we need to add it to the graph of our scene. So let's update our initial graph and add our snake object to it.
 
-- we said snake is define through a set of coordinates: let's draw an actual snake that is more than a dot:
+```elixir
+state = %{
+  width: num_tiles_width,
+  height: num_tiles_height
+}
 
-  ```elixir
-  snake = %{body: [{9, 9}, {10, 9}, {11, 9}], size: 3}
-  ```
+snake = %{body: [{9, 9}], size: 1}
 
+graph =
+  @graph
+  |> draw_object(snake)
+
+{:ok, state, push: graph}
+```
+
+To keep things organized, we'll implement our own `draw_object/2` helper function which will turn our abstract snake object into actual drawable objects for Scenic. The function takes two arguments: the graph and our snake object.
+
+> Coach: Talk about pipelines.
+
+For each square of the snake's body, we draw a tile one our grid.
+
+```elixir
+defp draw_object(graph, %{body: snake}) do
+  Enum.reduce(snake, graph, fn {x, y}, graph ->
+    draw_tile(graph, x, y, fill: :drak_slate_gray)
+  end)
+end
+```
+
+Then we'll add a separate function draw a single tile. We can use the `rrect/3` function from Scenic's `Primitives` module for that. To keep the snake's body distinguishable as individual tiles, we'll draw the rectangle with rounded corners. Black will be the default fill color, but whatever is passed in via the `opts` argument will override that.
+
+```elixir
+import Scenic.Primitives, only: [rrect: 3]
+
+@tile_radius 8
+
+defp draw_tile(graph, x, y, opts) do
+  tile_opts = Keyword.merge([fill: :black, translate: {x * @tile_size, y * @tile_size}], opts)
+  graph |> rrect({@tile_size, @tile_size, @tile_radius}, tile_opts)
+end
+```
+
+Now we have the first objects in our graph. Let's see how this looks like!
+
+Our snake does not look too snaky yet if it's that short. Let's change that and make it occupy three tiles:
+
+```elixir
+snake = %{body: [{9, 9}, {10, 9}, {11, 9}], size: 3}
+```
+
+![snake of 3 tiles on game screen](./images/03-three-tile-snake.png)
 
 ### 3. Let the worm move
 
