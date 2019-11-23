@@ -1,4 +1,4 @@
-### 3. Let the worm move
+### 3. Let the Snake Move
 
 - TODO:
   - explain game mechanics
