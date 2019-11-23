@@ -1,6 +1,7 @@
 ### 2. Draw a snake
 
 In our retro game, all objects and their movements are organized in big square "pixels". The pallet is a single pixel and the snake a line of these pixels moving one pixel a step. We'll therefore describe our playing field as a grid of square cells addressable like a coordinate system:
+
 - x-axis: 21 cells (tile 0 to 20)
 - y-axis: 18 cells (tile 0 to 17)
 
@@ -241,4 +242,3 @@ snake = %{body: [{9, 9}, {10, 9}, {11, 9}], size: 3}
 ```
 
 ![snake of 3 tiles on game screen](./../images/03-three-tile-snake.png)
-

@@ -68,4 +68,3 @@ We should see a window similar to this:
 ![sceenshot](./../images/01-scenic-new-screen.png)
 
 [Let's draw a snake](./02-draw-a-snake.md)
-

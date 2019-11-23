@@ -21,4 +21,3 @@
 
 - move things into components (e.g. the score, the snake)
 - add multiplayer
-
