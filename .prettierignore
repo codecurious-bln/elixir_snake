@@ -1,0 +1,5 @@
+# mix compile directory
+/_build/
+
+# mix dependencies directory
+/deps/
