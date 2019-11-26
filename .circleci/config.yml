@@ -1,0 +1,11 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/node:12
+    working_directory: ~/elixir_snake
+    steps:
+      - checkout
+      - run:
+        - name: Check Markdown formatting
+        - command: npx prettier --check "**/*.md"
