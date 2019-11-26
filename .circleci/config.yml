@@ -6,11 +6,17 @@ jobs:
     working_directory: ~/elixir_snake
     steps:
       - checkout
-      - run:
-        name: Check Markdown formatting
-        command: npx prettier --check "**/*.md"
+      - run: npx prettier --check "**/*.md"
+  code:
+    docker:
+      - image: circleci/elixir:1.9
+    working_directory: ~/elixir_snake
+    steps:
+      - checkout
+      - run: mix format --check-formatted
 workflows:
   version: 2
   lint:
     jobs:
       - docs
+      - code
