@@ -7,5 +7,5 @@ jobs:
     steps:
       - checkout
       - run:
-        - name: Check Markdown formatting
-        - command: npx prettier --check "**/*.md"
+        name: Check Markdown formatting
+        command: npx prettier --check "**/*.md"
