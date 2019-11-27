@@ -63,7 +63,7 @@ defmodule Snake.Scene.Game do
 end
 ```
 
-We turn our module into a Scenic "scene" by using the `Scenic.Scene` macro. This will automatically inject some functions into the module and require us to implement a certain "behavior". In our case, this means we'll have to implement an `init/2` callback. This function is called when the scene is started and meant to be used to set up the state of the scene. It takes two arguments, the first is passed in by the process which starts the scene and the second is an optional list of contextual options, such as information about the viewport:
+We turn our module into a Scenic "scene" by using `Scenic.Scene`. This will automatically inject some functions into the module and require us to implement a certain "behavior". In our case, this means we'll have to implement an `init/2` callback. This function is called when the scene is started and meant to be used to set up the state of the scene. It takes two arguments, the first is passed in by the process which starts the scene and the second is an optional list of contextual options, such as information about the viewport:
 
 ```elixir
 def init(arg, opts) do
