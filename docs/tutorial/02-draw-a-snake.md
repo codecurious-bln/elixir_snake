@@ -103,7 +103,7 @@ defmodule Snake.Scene.Game do
 end
 ```
 
-Running the game again, we see we have some information about the size of the view port in pixels. We can use this information to compute the number of rows and cells in our grid.
+Running the game again, we see we have some information about the size of the view port in pixels. We can use this information to compute the number of rows and columns in our grid.
 
 When running the game you may have noticed the compiler warning us:
 
