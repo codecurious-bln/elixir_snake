@@ -43,7 +43,7 @@ Let's see what we got:
 
 We will have a look at the `mix.exs` file - open the file in your editor.
 
-This file contains some core information about our project. There is a `deps` section at the bottom of the file listing the dependencies needed for running the project. The dependencies are other Elixir libraries, hosted as "hex" packages on [hex.pm](https://hex.pm)
+This file contains some core information about our project. There is a `deps` section at the bottom of the file listing the dependencies needed for running the project. The dependencies are other Elixir libraries, hosted as "hex" packages on [hex.pm](https://hex.pm).
 
 > Coach: talks about hex and package managers
 
