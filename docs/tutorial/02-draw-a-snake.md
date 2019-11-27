@@ -181,7 +181,7 @@ Let's start by changing the default background of the scene from black to a more
 @graph Graph.build(clear_color: :dark_sea_green)
 ```
 
-Nice! We already get that 90s feeling.
+Nice! We are already getting that 90s feeling!
 
 The first object we want to draw on our scene is the snake. We'll define it as an ordered list of x and y coordinate pairs corresponding to the locations of the cells in the grid the snake is currently occupying. We'll refer to this as the "body" of the snake. In addition to that, we'll also add information about the current "size" of the snake. That should be enough to be able to draw the snake onto the scene:
 
@@ -199,9 +199,7 @@ state = %{
 
 snake = %{body: [{9, 9}], size: 1}
 
-graph =
-  @graph
-  |> draw_object(snake)
+graph = draw_object(@graph, snake)
 
 {:ok, state, push: graph}
 ```
@@ -229,7 +227,7 @@ import Scenic.Primitives, only: [rrect: 3]
 
 defp draw_tile(graph, x, y, opts) do
   tile_opts = Keyword.merge([fill: :black, translate: {x * @tile_size, y * @tile_size}], opts)
-  graph |> rrect({@tile_size, @tile_size, @tile_radius}, tile_opts)
+  rrect(graph, {@tile_size, @tile_size, @tile_radius}, tile_opts)
 end
 ```
 
