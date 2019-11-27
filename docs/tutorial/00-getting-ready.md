@@ -19,3 +19,5 @@ Once everything is set up, you can install the tasks via `mix`:
 Now we are prepared to start building our Scenic application!
 
 Navigate into your personal projects directory _(or wherever you want to keep the files for the tutorial)_ and then let's get started 🚀
+
+[Let's create a scenic app](./01-create-a-scenic-app.md)
