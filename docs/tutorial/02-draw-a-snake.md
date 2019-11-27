@@ -119,7 +119,7 @@ def init(_arg, opts) do
 end
 ```
 
-So let's use the view port information to set up our grid. We'll define the default length of 32 pixels for the edge of one square and then compute how many we can fit onto the screen. As this information is necessary throughout the whole game, we store it in the `state` of the scene.
+Now let's use the view port information to set up our grid. We'll define the default length of 32 pixels for the edge of one square and then compute how many we can fit onto the screen. As this information is necessary throughout the whole game, we store it in the `state` of the scene.
 
 ```elixir
 @tile_size 32
