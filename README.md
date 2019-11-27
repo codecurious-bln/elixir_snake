@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/codecurious-bln/elixir_snake.svg?style=svg)](https://circleci.com/gh/codecurious-bln/elixir_snake)
+
 # Build a Snake game to learn Elixir
 
 This tutorial is about building a Snake game with Scenic to teach Elixir.

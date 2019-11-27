@@ -54,8 +54,7 @@ This file contains some core information about our project. There is a `deps` se
       ]
     end
 
-To run the app, we need install the listed libraries.
-`mix` also gives us a task to do that, let's run it in the terminal:
+To run the app, we need install the listed libraries. `mix` also gives us a task to do that, let's run it in the terminal:
 
     $ mix deps.get
 
