@@ -75,7 +75,7 @@ With that set up, let's restart our game:
 
     $ mix scenic.run
 
-Nothing changed! We need to update the configuration of our project to take this scene as the entry point for our application. So let's change the `default_scene` in the `config/config.exs` file to be our new `Game` module:
+Nothing changed! We need to update the configuration of our project to make this scene the entry point for our application. So let's change the `default_scene` in the `config/config.exs` file to be our new `Game` module:
 
 ```elixir
 default_scene: {Snake.Scene.Game, nil},
