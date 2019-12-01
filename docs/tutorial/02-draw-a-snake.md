@@ -221,7 +221,7 @@ For each square of the snake's body, we draw a tile on our grid.
 ```elixir
 defp draw_object(graph, %{body: snake}) do
   Enum.reduce(snake, graph, fn {x, y}, graph ->
-    draw_tile(graph, x, y, fill: :drak_slate_gray)
+    draw_tile(graph, x, y, fill: :dark_slate_gray)
   end)
 end
 ```
