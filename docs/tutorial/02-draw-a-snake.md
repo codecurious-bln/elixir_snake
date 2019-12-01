@@ -214,8 +214,6 @@ graph = draw_object(@graph, snake)
 
 To keep things organized, we'll implement our own `draw_object/2` helper function which will turn our abstract snake object into actual drawable objects for Scenic. The function takes two arguments: the graph and our snake object.
 
-> Coach: Talk about pipelines.
-
 For each square of the snake's body, we draw a tile on our grid.
 
 ```elixir
