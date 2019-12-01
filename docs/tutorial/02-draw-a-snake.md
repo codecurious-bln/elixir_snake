@@ -226,16 +226,16 @@ defp draw_object(graph, %{body: snake}) do
 end
 ```
 
-Then we'll add a separate function to draw a single tile. We can use the `rrect/3` function from Scenic's `Primitives` module for that. To keep the snake's body distinguishable, we'll draw the rectangle with rounded corners. Black is the default fill color, but whatever is passed in via the `opts` argument will override that.
+Then we'll add a separate function to draw a single tile. We can use the `rounded_rectangle/3` function from Scenic's `Primitives` module for that. To keep the snake's body distinguishable, we'll draw the rectangle with rounded corners. Black is the default fill color, but whatever is passed in via the `opts` argument will override that.
 
 ```elixir
-import Scenic.Primitives, only: [rrect: 3]
+import Scenic.Primitives, only: [rounded_rectangle: 3]
 
 @tile_radius 8
 
 defp draw_tile(graph, x, y, opts) do
   tile_opts = Keyword.merge([fill: :black, translate: {x * @tile_size, y * @tile_size}], opts)
-  rrect(graph, {@tile_size, @tile_size, @tile_radius}, tile_opts)
+  rounded_rectangle(graph, {@tile_size, @tile_size, @tile_radius}, tile_opts)
 end
 ```
 
