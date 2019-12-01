@@ -67,7 +67,7 @@ We turn our module into a Scenic "scene" by using `Scenic.Scene`. This will auto
 
 ```elixir
 def init(arg, opts) do
-
+  {:ok, :ok}
 end
 ```
 
@@ -99,6 +99,8 @@ defmodule Snake.Scene.Game do
     viewport = opts[:viewport]
 
     IO.inspect(ViewPort.info(viewport), label: "viewport info")
+
+    {:ok, :ok}
   end
 end
 ```
@@ -120,6 +122,8 @@ def init(arg, opts) do
     width: number_of_columns,
     height: number_of_rows
   }
+
+  {:ok, :ok}
 end
 ```
 
@@ -144,6 +148,8 @@ def init(_arg, opts) do
     width: number_of_columns,
     height: number_of_rows
   }
+
+  {:ok, :ok}
 end
 ```
 
