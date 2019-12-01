@@ -16,7 +16,7 @@ jobs:
     - name: Setup Elixir
       uses: actions/setup-elixir@1.0.0
       with:
-        elixir-version:: 1.9.X
+        elixir-version: 1.9.X
         otp-version: 22.X
         
     - name: Run prettier
