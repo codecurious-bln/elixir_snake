@@ -1,0 +1,23 @@
+name: Elixir CI
+
+on: push
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+      
+    - name: Setup Node.js for use with actions
+      uses: actions/setup-node@v1.1.0
+      
+    - name: Setup Elixir
+      uses: actions/setup-elixir@1.0.0
+      
+    - name: Run prettier
+      run: npx prettier --write "**/*.md"
+      
+    - name: Run mix format
+      run: mix format
