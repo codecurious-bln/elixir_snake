@@ -2,8 +2,8 @@
 
 In our retro game, all objects and their movements are organized in big square "cells". The pallet is a single cell and the snake a line of these cells moving one cell a step. We'll, therefore, describe our playing field as a grid of square cells addressable like a coordinate system:
 
-- x-axis (the horizontal axis, composed of columns): 21 cells (tile 0 to 20)
-- y-axis (the vertical axis, composed of rows): 18 cells (tile 0 to 17)
+- x-axis (the horizontal axis): composed of 21 columns (from 0 to 20)
+- y-axis (the vertical axis): composed of 18 rows (from 0 to 17)
 
 ```
    │ 0│ 1│ 2│ 3│ 4│ 5│ 6│ 7│ 8│ 9│10│11│12│13│14│15│16│17│18│19│20│
