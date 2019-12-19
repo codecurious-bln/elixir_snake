@@ -117,6 +117,8 @@ We can slightly simplify the code and extract a common utility to compute the ne
 
 ☝️ Please note that the newly extracted function `update_snake_direction` is private.
 
+> Coach: Explain differences between public and private functions.
+
 ### 5. Add food for the snake
 
 ### 6. Allow snake to eat
