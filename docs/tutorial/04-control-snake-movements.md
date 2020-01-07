@@ -84,6 +84,8 @@ def handle_input(_input, _context, state), do: {:noreply, state}
 
 And here we are, now we can control the snake 🎉
 
+![Control snake movements](./../images/04-control-snake-movements.gif)
+
 We can slightly simplify the code and extract a common utility to compute the new state.
 
 ```elixir
