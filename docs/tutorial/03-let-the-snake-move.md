@@ -16,12 +16,12 @@ def init(_arg, opts) do
 
   {:ok, %ViewPort.Status{size: {vp_width, vp_height}}} = ViewPort.info(viewport)
 
-  num_tiles_width = trunc(vp_width / @tile_size)
-  num_tiles_height = trunc(vp_height / @tile_size)
+  number_of_columns = div(vp_width, @tile_size)
+  number_of_rows = div(vp_height, @tile_size)
 
   state = %{
-    width: num_tiles_width,
-    height: num_tiles_height
+    width: number_of_columns,
+    height: number_of_rows
   }
 
   snake = %{body: [{9, 9}, {10, 9}, {11, 9}], size: 5}
@@ -58,12 +58,12 @@ def init(_arg, opts) do
 
   {:ok, %ViewPort.Status{size: {vp_width, vp_height}}} = ViewPort.info(viewport)
 
-  num_tiles_width = trunc(vp_width / @tile_size)
-  num_tiles_height = trunc(vp_height / @tile_size)
+  number_of_columns = div(vp_width, @tile_size)
+  number_of_rows = div(vp_height, @tile_size)
 
   state = %{
-    width: num_tiles_width,
-    height: num_tiles_height,
+    width: number_of_columns,
+    height: number_of_rows,
     snake: %{body: [{9, 9}, {10, 9}, {11, 9}], size: 5}
   }
 
@@ -90,8 +90,8 @@ end
 
 ```elixir
 state = %{
-  width: num_tiles_width,
-  height: num_tiles_height,
+  width: number_of_columns,
+  height: number_of_rows,
   snake: %{body: [{9, 9}, {10, 9}, {11, 9}], size: 5, direction: {1, 0}}
 }
 ```
@@ -127,8 +127,8 @@ end
 ```elixir
 state = %{
   graph: @graph,
-  width: num_tiles_width,
-  height: num_tiles_height,
+  width: number_of_columns,
+  height: number_of_rows,
   snake: %{body: [{9, 9}, {10, 9}, {11, 9}], size: 5, direction: {1, 0}}
 }
 
@@ -170,13 +170,13 @@ def init(_arg, opts) do
 
   {:ok, %ViewPort.Status{size: {vp_width, vp_height}}} = ViewPort.info(viewport)
 
-  num_tiles_width = trunc(vp_width / @tile_size)
-  num_tiles_height = trunc(vp_height / @tile_size)
+  number_of_columns = div(vp_width, @tile_size)
+  number_of_rows = div(vp_height, @tile_size)
 
   state = %{
     graph: @graph,
-    width: num_tiles_width,
-    height: num_tiles_height,
+    width: number_of_columns,
+    height: number_of_rows,
     snake: %{body: [{9, 9}, {10, 9}, {11, 9}], size: 5, direction: {1, 0}}
   }
 
