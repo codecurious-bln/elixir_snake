@@ -2,7 +2,7 @@
 
 The fast and constantly moving snake is what makes the game challenging to play. Players can only "steer" the direction the snake is turning to. The always hungry animal is automatically moving forward all the time.
 
-To add this aspect to our currently static game scene, we need periodically update the graph and re-render the scene, moving the position of our snake one tile forward each time. Being a `GenServer` process under the hood, our `Game` scene can send and receive messages from any Elixir process, including itself. When initializing the scene, we'll also start a periodically ticking timer that will send a message to the scene process every time the snake position should change. We can make use of Erlang's built in `:timer` module for that and send `:frame` message every `192` milliseconds.
+To add this aspect to our currently static game scene, we need to periodically update the graph and re-render the scene, moving the position of our snake one tile forward each time. Being a `GenServer` process under the hood, our `Game` scene can send and receive messages from any Elixir process, including itself. When initializing the scene, we'll also start a periodically ticking timer that will send a message to the scene process every time the snake position should change. We can make use of Erlang's built in `:timer` module for that and send a `:frame` message every `192` milliseconds to our `GenServer`.
 
 > Coach: Explain interoperability between Elixir and Erlang.
 
@@ -34,7 +34,7 @@ def init(_arg, opts) do
 end
 ```
 
-Then we need to implement the `handle_info/2` callback function where our scene process can receive incoming messages in the format `{type, state}`. We'll match on the `type` tuple to make sure are handling the right message. We'll for now just output some logging information to see what's happening:
+Then we need to implement the `handle_info/2` callback function where our scene process can receive incoming messages in the format `{type, state}`. We'll match on the `type` tuple to make sure we're handling the right message. We'll for now just output some logging information to see what's happening:
 
 ```elixir
 
@@ -50,16 +50,11 @@ def handle_info(:frame, state) do
 end
 ```
 
-In order to move the snake one tile forward, we need to keep track about its position in the game state. So let's refactor our state initialization to include the `snake` in the scene's state:
+In order to move the snake one tile forward, we need to keep track of its position. We can achieve this by including the `snake` in the scene's state:
 
 ```elixir
 def init(_arg, opts) do
-  viewport = opts[:viewport]
-
-  {:ok, %ViewPort.Status{size: {vp_width, vp_height}}} = ViewPort.info(viewport)
-
-  number_of_columns = div(vp_width, @tile_size)
-  number_of_rows = div(vp_height, @tile_size)
+  # ...
 
   state = %{
     width: number_of_columns,
@@ -75,7 +70,7 @@ def init(_arg, opts) do
 end
 ```
 
-We'll also turn our `draw_object/2` function into an `draw_objects/2` function. Instead of just the snake object, we'll pass the whole state as the second argument.
+We'll also turn our `draw_object/2` function into a `draw_objects/2` function. Instead of just the snake object, we'll pass the whole state as the second argument.
 
 ```elixir
 defp draw_objects(graph, %{snake: %{body: body}}) do
@@ -85,8 +80,7 @@ defp draw_objects(graph, %{snake: %{body: body}}) do
 end
 ```
 
-
-- add direction to snake
+There's one last piece of information missing before we start working on making the snake move. We need to add the snake direction to the state, so that we know how to move it. Later on, we'll be able to change its direction, but for now it will only move to the right.
 
 ```elixir
 state = %{
@@ -96,7 +90,9 @@ state = %{
 }
 ```
 
-- add function to move snake and return new state:
+The snake movement is described by a shift of its body coordinates. Looking at the list that represents the snake body, we can see that this is equivalent to adding a new pair of coordinates to the beginning of the list and removing another from the end, so that the snake size is preserved.
+
+Now that we have our snake movement logic figured out, let's go ahead and implement a `move_snake/1` function.
 
 ```elixir
 defp move_snake(%{snake: snake} = state) do
@@ -120,50 +116,21 @@ defp move(%{width: w, height: h}, {pos_x, pos_y}, {vec_x, vec_y}) do
 end
 ```
 
-- need to call the `move` function in our `handle_info` function with every tick and the update the scene again
-- problem: need access to the graph there in order to render new stuff
-- solution: add the graph to the game state
+When calculating the new coordinates in the code snippet above, we use the remainder function `rem` to make the snake appear from the opposite side of the screen when it reaches the limits of the graph.
 
-```elixir
-state = %{
-  graph: @graph,
-  width: number_of_columns,
-  height: number_of_rows,
-  snake: %{body: [{9, 9}, {10, 9}, {11, 9}], size: 5, direction: {1, 0}}
-}
+The next step will be to update our `handle_info/2` callback with the function we just created. We'll also do some refactoring to make things cleaner, by delegating the responsibility of drawing the objects in the graph and pushing it to the viewport to our `handle_info/2` callback, instead of `init/2`. After these changes, our `handle_info/2` callback will look like this:
 
-# update the graph and push it to be rendered
-graph = draw_objects(state.graph, state)
-```
-
-- update handle_info function to draw a new graph
-- basically all scene callbacks support a `push: graph` option (https://hexdocs.pm/scenic/overview_scene.html#pushing-a-graph)
 ```elixir
 def handle_info(:frame, state) do
   new_state = move_snake(state)
-  graph = draw_objects(new_state.graph, new_state)
+  graph = draw_objects(@graph, new_state)
 
   {:noreply, new_state, push: graph}
 end
 ```
 
-- update configureation so that snake better fit for window size in config file:
-```elixir
-config :snake, :viewport, %{
-  name: :main_viewport,
-  size: {704, 608},
-  default_scene: {Snake.Scene.Game, nil},
-  drivers: [
-    %{
-      module: Scenic.Driver.Glfw,
-      name: :glfw,
-      opts: [resizeable: false, title: "snake"]
-    }
-  ]
-}
-```
+So at every tick of the timer, the state of the scene will be updated with the new coordinates of the snake body and the snake object will be added on top of the initial `@graph`. The `init/2` callback will be responsible only for setting up the initial state, triggering a timer to send a message to our scene at each `@frame_ms` interval and pushing the initial `@graph`. Here's how it should look like now:
 
-- with that in place, we can skip pushing the initial graph in the init function:
 ```elixir
 def init(_arg, opts) do
   viewport = opts[:viewport]
@@ -174,7 +141,6 @@ def init(_arg, opts) do
   number_of_rows = div(vp_height, @tile_size)
 
   state = %{
-    graph: @graph,
     width: number_of_columns,
     height: number_of_rows,
     snake: %{body: [{9, 9}, {10, 9}, {11, 9}], size: 5, direction: {1, 0}}
@@ -187,35 +153,12 @@ def init(_arg, opts) do
 end
 ```
 
-- with the graph being part of the state, also not necessary to pass it to our draw_objects function:
+As a last step before we move on to the next chapter, let's update the viewport size in the `config/config.exs` file, so that the snake better fits to it.
+
 ```elixir
-defp draw_objects(%{graph: graph, snake: %{body: body}}) do
-  Enum.reduce(body, graph, fn {x, y}, graph ->
-    draw_tile(graph, x, y, fill: :dark_slate_gray)
-  end)
-end
+config :snake, :viewport, %{
+  # ...
+  size: {704, 608},
+  # ...
+}
 ```
-
-
-- need to add snake position to the state to that we know where to move it
-- snake needs to be able to disappear at one end and reappear on the other side (use rem)
-
-
-
-
-### 4. Add food for the worm
-
-### 5. Control worm movement
-
-### 6. Allow worm to eat
-
-### 7. Allow worm to die
-
-### 8. Add static score
-
-### 9. Add live scoring
-
-### 10. Potential later steps
-
-- move things into components (e.g. the score, the snake)
-- add multiplayer
