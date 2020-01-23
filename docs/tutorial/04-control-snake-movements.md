@@ -119,8 +119,6 @@ end
 
 > Coach: Explain differences between public and private functions.
 
-![Control snake movements](./../images/04-control-snake-movements.gif)
-
 ### 5. Add food for the snake
 
 ### 6. Allow snake to eat
