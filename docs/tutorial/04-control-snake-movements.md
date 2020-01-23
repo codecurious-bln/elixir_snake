@@ -57,7 +57,7 @@ Let's add the handlers to our scene! We'll use pattern matching to match the rig
 ```elixir
 # Keyboard controls
 def handle_input({:key, {"left", :press, _}}, _context, state) do
-  new_state = put_in(state, [:snake, :direction], {1, 0})
+  new_state = put_in(state, [:snake, :direction], {-1, 0})
   {:noreply, new_state}
 end
 
