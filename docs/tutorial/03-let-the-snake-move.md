@@ -106,7 +106,7 @@ defp move_snake(%{snake: snake} = state) do
   new_body = Enum.take([new_head | body], size)
 
   state
-  |> put_in([:objects, :snake, :body], new_body)
+  |> put_in([:snake, :body], new_body)
 end
 
 defp move(%{width: w, height: h}, {pos_x, pos_y}, {vec_x, vec_y}) do
