@@ -19,7 +19,7 @@ Scenic conveniently provides us the [`handle_input/3`](https://hexdocs.pm/scenic
 
 > Coach: Explain what a callback is and how it is used for defining behaviours.
 
-`handle_input/3` is invoked when the scene receives input from the underlying hardware. It may consume the received input message or propagate it further up to the View Port's supervision structure.
+`handle_input/3` is invoked when the scene receives input from the underlying hardware. It may consume the received input or propagate it further up to the View Port's supervision structure.
 
 In our case, we will use the handler to update the direction in the scene's state without propagating the received input further up.
 
@@ -29,7 +29,7 @@ In our case, we will use the handler to update the direction in the scene's stat
 
 `handle_input/3` requires three arguments:
 
-- the input message
+- the input
 - the input's context (👈 ignore it, we won't need it)
 - the scene's current state
 
