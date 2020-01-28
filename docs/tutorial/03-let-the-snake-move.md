@@ -24,7 +24,7 @@ def init(_arg, opts) do
     height: number_of_rows
   }
 
-  snake = %{body: [{9, 9}, {10, 9}, {11, 9}], size: 5}
+  snake = %{body: [{11, 9}, {10, 9}, {9, 9}]}
   graph = draw_object(@graph, snake)
 
   # start timer
@@ -53,21 +53,11 @@ end
 In order to move the snake one tile forward, we need to keep track of its position. We can achieve this by including the `snake` in the scene's state:
 
 ```elixir
-def init(_arg, opts) do
-  # ...
-
-  state = %{
-    width: number_of_columns,
-    height: number_of_rows,
-    snake: %{body: [{9, 9}, {10, 9}, {11, 9}], size: 5}
-  }
-
-  graph = draw_objects(@graph, state)
-
-  {:ok, _timer} = :timer.send_interval(@frame_ms, :frame)
-
-  {:ok, state, push: graph}
-end
+state = %{
+  width: number_of_columns,
+  height: number_of_rows,
+  snake: %{body: [{11, 9}, {10, 9}, {9, 9}]}
+}
 ```
 
 We'll also turn our `draw_object/2` function into a `draw_objects/2` function. Instead of just the snake object, we'll pass the whole state as the second argument.
@@ -80,29 +70,51 @@ defp draw_objects(graph, %{snake: %{body: body}}) do
 end
 ```
 
-There's one last piece of information missing before we start working on making the snake move. We need to add the snake direction to the state, so that we know how to move it. Later on, we'll be able to change its direction, but for now it will only move to the right.
+There's one last piece of information missing before we can start working on making the snake move. We need to add the snake direction to the state, so we know how to update its body coordinates. Later on, we'll be able to change its direction, but for now it will only move to the right.
+
+So how can we represent the snake direction? Since this is a 2 dimensional game, it seems natural to represent it as a pair of values, one for each axis (x, y). Or, translating it to the Elixir world, as a tuple `{x, y}`.
+
+```
+          │-1
+          │
+          │
+          │
+-1 ───────┼────────> 1
+          │0
+          │
+          │
+          │1
+```
+
+Based on the Cartesian system above, we can define the direction of the snake as:
+
+- left: `{-1, 0}`
+- right: `{1, 0}`
+- top: `{0, -1}`
+- down: `{0, 1}`
+
+Let's add this information to the snake object:
 
 ```elixir
 state = %{
   width: number_of_columns,
   height: number_of_rows,
-  snake: %{body: [{9, 9}, {10, 9}, {11, 9}], size: 5, direction: {1, 0}}
+  snake: %{body: [{11, 9}, {10, 9}, {9, 9}], direction: {1, 0}}
 }
 ```
 
-The snake movement is described by a shift of its body coordinates. Looking at the list that represents the snake body, we can see that this is equivalent to adding a new pair of coordinates to the beginning of the list and removing another from the end, so that the snake size is preserved.
-
-Now that we have our snake movement logic figured out, let's go ahead and implement a `move_snake/1` function.
+Now we're ready to implement the movement logic. Let's recall what happens during the game when you turn the snake. At first, only the head turns, right? It's the head that controls the movement. At each step, the snake moves as if we were placing a new head on the tile that we want to move to and removing the last tile in the snake tail, so that its size is preserved. Or, in mathematical terms, that would be equivalent to adding a new tuple to the beginning of the list and removing another one from the end.
 
 ```elixir
 defp move_snake(%{snake: snake} = state) do
-  %{body: body, size: size, direction: direction} = snake
+  %{body: body, direction: direction} = snake
 
   # new head
   [head | _] = body
   new_head = move(state, head, direction)
 
   # truncate body
+  size = length(body)
   new_body = Enum.take([new_head | body], size)
 
   state
@@ -110,13 +122,13 @@ defp move_snake(%{snake: snake} = state) do
 end
 
 defp move(%{width: w, height: h}, {pos_x, pos_y}, {vec_x, vec_y}) do
+  # We use the remainder function `rem` to make the snake appear from the opposite side
+  # of the screen when it reaches the limits of the graph.
   x = rem(pos_x + vec_x + w, w)
   y = rem(pos_y + vec_y + h, h)
   {x, y}
 end
 ```
-
-When calculating the new coordinates in the code snippet above, we use the remainder function `rem` to make the snake appear from the opposite side of the screen when it reaches the limits of the graph.
 
 The next step will be to update our `handle_info/2` callback with the function we just created. We'll also do some refactoring to make things cleaner, by delegating the responsibility of drawing the objects in the graph and pushing it to the viewport to our `handle_info/2` callback, instead of `init/2`. After these changes, our `handle_info/2` callback will look like this:
 
@@ -143,7 +155,7 @@ def init(_arg, opts) do
   state = %{
     width: number_of_columns,
     height: number_of_rows,
-    snake: %{body: [{9, 9}, {10, 9}, {11, 9}], size: 5, direction: {1, 0}}
+    snake: %{body: [{9, 9}, {10, 9}, {11, 9}], direction: {1, 0}}
   }
 
   # start timer
