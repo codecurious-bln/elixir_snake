@@ -176,3 +176,5 @@ config :snake, :viewport, %{
 ```
 
 ![snake moving](./../images/04-moving-snake.gif)
+
+[Let's control the snake](./04-control-snake-movements.md)
