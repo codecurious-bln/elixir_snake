@@ -109,13 +109,13 @@ Now we're ready to implement the movement logic. Let's recall what happens durin
 defp move_snake(%{snake: snake} = state) do
   %{body: body, direction: direction} = snake
 
-  # new head
+  # new head's position
   [head | _] = body
   new_head = move(state, head, direction)
 
-  # truncate body
-  size = length(body)
-  new_body = Enum.take([new_head | body], size)
+  # place a new head on the tile that we want to move to
+  # and remove the last tile from the snake tail
+  new_body = List.delete_at([new_head | body], -1)
 
   state
   |> put_in([:snake, :body], new_body)
@@ -176,3 +176,5 @@ config :snake, :viewport, %{
 ```
 
 ![snake moving](./../images/04-moving-snake.gif)
+
+[Let's control the snake](./04-control-snake-movements.md)

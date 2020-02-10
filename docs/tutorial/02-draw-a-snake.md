@@ -252,3 +252,5 @@ snake = %{body: [{9, 9}, {10, 9}, {11, 9}], size: 3}
 ```
 
 ![snake of 3 tiles on game screen](./../images/03-three-tile-snake.png)
+
+[Let's make the snake move](./03-let-the-snake-move.md)
