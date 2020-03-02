@@ -1,99 +1,45 @@
+# Game at the end of Chapter 2
 defmodule Snake.Scene.Game2 do
   use Scenic.Scene
 
-  import Scenic.Primitives, only: [rrect: 3, text: 3]
+  import Scenic.Primitives, only: [rounded_rectangle: 3]
 
-  alias Scenic.Graph
   alias Scenic.ViewPort
+  alias Scenic.Graph
 
-  # Constants
-  @graph Graph.build(font: :roboto, font_size: 36)
+  @graph Graph.build(clear_color: :dark_sea_green)
   @tile_size 32
   @tile_radius 8
-  @frame_ms 192
 
-  # Initialize the game scene
   def init(_arg, opts) do
     viewport = opts[:viewport]
 
-    # calculate the transform that centers the snake in the viewport
     {:ok, %ViewPort.Status{size: {vp_width, vp_height}}} = ViewPort.info(viewport)
 
-    # dimensions of the grid (21x18 tiles, 0-indexed)
-    num_tiles_width = trunc(vp_width / @tile_size)
-    num_tiles_height = trunc(vp_height / @tile_size)
+    number_of_columns = div(vp_width, @tile_size)
+    number_of_rows = div(vp_height, @tile_size)
 
-    # start a very simple animation timer
-    {:ok, timer} = :timer.send_interval(@frame_ms, :frame)
-
-    # The entire game state will be held here
     state = %{
-      viewport: viewport,
-      width: num_tiles_width,
-      height: num_tiles_height,
-      graph: @graph,
-      frame_count: 1,
-      frame_timer: timer,
-      score: 0,
-      objects: %{
-        pellet: {5, 5},
-        snake: %{body: [{9, 9}], size: 5, direction: {1, 0}}
-      }
+      width: number_of_columns,
+      height: number_of_rows
     }
 
-    {:ok, state}
+    snake = %{body: [{9, 9}, {10, 9}, {11, 9}]}
+
+    graph = draw_object(@graph, snake)
+
+    {:ok, state, push: graph}
   end
 
-  def handle_info(:frame, %{frame_count: frame_count} = state) do
-    state = move_snake(state)
-
-    graph =
-      state.graph
-      |> draw_score(state.score)
-      |> draw_game_objects(state.objects)
-
-    {:noreply, %{state | frame_count: frame_count + 1}, push: graph}
-  end
-
-  # Move the snake to its next position according to the direction. Also limits the size.
-  defp move_snake(%{objects: %{snake: snake}} = state) do
-    state
-  end
-
-  defp move(%{width: w, height: h}, {pos_x, pos_y}, {vec_x, vec_y}) do
-  end
-
-  #
-  # -- DRAWING
-  #
-
-  # Draw the score HUD
-  defp draw_score(graph, score) do
-    graph
-    |> text("Score: #{score}", fill: :white, translate: {@tile_size, @tile_size})
-  end
-
-  defp draw_game_objects(graph, objects) do
-    Enum.reduce(objects, graph, fn {type, object}, graph ->
-      draw_object(graph, type, object)
-    end)
-  end
-
-  # Pellet is simply a coordinate pair
-  defp draw_object(graph, :pellet, {x, y}) do
-    draw_tile(graph, x, y, fill: :orange)
-  end
-
-  # Snake's body is a list of coordinate pairs
-  defp draw_object(graph, :snake, %{body: snake}) do
+  defp draw_object(graph, %{body: snake}) do
     Enum.reduce(snake, graph, fn {x, y}, graph ->
-      draw_tile(graph, x, y, fill: :blue)
+      draw_tile(graph, x, y, fill: :dark_slate_gray)
     end)
   end
 
-  # Draw tiles as rounded rectangles to look nice
+  # draw tiles as rounded rectangles to look nice
   defp draw_tile(graph, x, y, opts) do
-    tile_opts = Keyword.merge([fill: :white, translate: {x * @tile_size, y * @tile_size}], opts)
-    graph |> rrect({@tile_size, @tile_size, @tile_radius}, tile_opts)
+    tile_opts = Keyword.merge([fill: :black, translate: {x * @tile_size, y * @tile_size}], opts)
+    rounded_rectangle(graph, {@tile_size, @tile_size, @tile_radius}, tile_opts)
   end
 end

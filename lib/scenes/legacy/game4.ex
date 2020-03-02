@@ -1,4 +1,4 @@
-defmodule Snake.Scene.Game3 do
+defmodule Snake.Scene.Legacy.Game4 do
   use Scenic.Scene
 
   import Scenic.Primitives, only: [rrect: 3, text: 3]
@@ -42,6 +42,30 @@ defmodule Snake.Scene.Game3 do
     }
 
     {:ok, state}
+  end
+
+  # Keyboard controls
+  def handle_input({:key, {"left", :press, _}}, _context, state) do
+    {:noreply, update_snake_direction(state, {-1, 0})}
+  end
+
+  def handle_input({:key, {"right", :press, _}}, _context, state) do
+    {:noreply, update_snake_direction(state, {1, 0})}
+  end
+
+  def handle_input({:key, {"up", :press, _}}, _context, state) do
+    {:noreply, update_snake_direction(state, {0, -1})}
+  end
+
+  def handle_input({:key, {"down", :press, _}}, _context, state) do
+    {:noreply, update_snake_direction(state, {0, 1})}
+  end
+
+  def handle_input(_input, _context, state), do: {:noreply, state}
+
+  # Change the snake's current direction.
+  defp update_snake_direction(state, direction) do
+    put_in(state, [:objects, :snake, :direction], direction)
   end
 
   def handle_info(:frame, %{frame_count: frame_count} = state) do

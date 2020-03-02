@@ -1,4 +1,4 @@
-defmodule Snake.Scene.Game5 do
+defmodule Snake.Scene.Legacy.Game6 do
   use Scenic.Scene
 
   import Scenic.Primitives, only: [rrect: 3, text: 3]
@@ -11,6 +11,7 @@ defmodule Snake.Scene.Game5 do
   @tile_size 32
   @tile_radius 8
   @frame_ms 192
+  @game_over_scene Snake.Scene.GameOver
 
   # Initialize the game scene
   def init(_arg, opts) do
@@ -93,6 +94,7 @@ defmodule Snake.Scene.Game5 do
     state
     |> put_in([:objects, :snake, :body], new_body)
     |> maybe_eat_pellet(new_head)
+    |> maybe_die()
   end
 
   defp move(%{width: w, height: h}, {pos_x, pos_y}, {vec_x, vec_y}) do
@@ -131,6 +133,15 @@ defmodule Snake.Scene.Game5 do
 
   def update_score(state = %{score: score}) do
     %{state | score: score + 100}
+  end
+
+  def maybe_die(state = %{viewport: vp, objects: %{snake: %{body: body}}, score: score}) do
+    # If ANY duplicates were removed, this means we overlapped at least once
+    if length(Enum.uniq(body)) < length(body) do
+      ViewPort.set_root(vp, {@game_over_scene, score})
+    end
+
+    state
   end
 
   #
