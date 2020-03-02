@@ -6,6 +6,8 @@ The goal of this chapter is to allow the snake to eat the food and grow. Let's q
 
 To achieve this, we'll check whether the snake's head has the same coordinates as the pellet. As we need to perform this check again after every movement, the `move_snake/1` function looks like a good place this.
 
+👇Let's add it at the end of the state update pipeline, the pipe operator `|>` comes in handy here 💚
+
 ```elixir
 defp move_snake(%{snake: snake} = state) do
   %{body: body, size: size, direction: direction} = snake
@@ -20,13 +22,11 @@ defp move_snake(%{snake: snake} = state) do
 
   state
   |> put_in([:objects, :snake, :body], new_body)
-  |> maybe_eat_food(new_head)
+  |> maybe_eat_pellet(new_head)
 end
 ```
 
-👆Let's add it at the end of the state update pipeline, the pipe operator `|>` comes in handy here 💚
-
-Our new function `maybe_eat_food/2` receives:
+Our new function `maybe_eat_pellet/2` receives:
 
 - The current state as 1st argument
 - The snake's head coordinates as 2nd argument
@@ -38,15 +38,13 @@ or otherwise, just return the current state without any changes.
 Let's draft out the `maybe_eat_pellet/2` function and implement it step by step.
 
 ```elixir
-def maybe_eat_pellet(state = %{pellet: pellet}, snake_head) do
-  if (pellet == snake_head)
-    state
-    |> grow_snake()
-    |> place_pellet()
-  else
-    state
-  end
+def maybe_eat_pellet(state = %{pellet: pellet}, snake_head) when pellet == snake_head do
+  state
+  |> grow_snake()
+  |> place_pellet()
 end
+
+def maybe_eat_pellet(state, _snake_head), do: state
 ```
 
 Growing the snake's body can be tricky. Let's explore some possibilities:
@@ -58,6 +56,11 @@ The most natural approach is appending a new tile to the end of the body. But ho
 The only way to safely grow our snake its to preserve its body when it ate the pellet. We can set a boolean flag `has_eaten` in the state and on the next tick not delete the last body tile if is set to `true` 🤓. This will naturally grow our snake by one tile.
 
 Remember, we set a timer at the beginning in out `init/1` function that periodically sends a message, which is intercepted by our `handle_info/2`, which in turn calls the `move_snake/1` function. That's our game tick.
+
+Let's add these two new functions in our code:
+
+- `grow_snake/1` sets the `:has_eatan` flag to true in the state
+- `place_pellet/1` computes a new pair of coordinates for the food. If the new value matches any tile in the snake's body, it recursively generate a new position until it does not overlap any more.
 
 ```elixir
 defp move_snake(%{snake: snake} = state) do
@@ -73,18 +76,16 @@ defp move_snake(%{snake: snake} = state) do
 
   state
   |> put_in([:snake, :body], new_body)
-  |> maybe_eat_food(new_head)
+  |> maybe_eat_pellet(new_head)
 end
 
-def maybe_eat_pellet(state = %{pellet: pellet}, snake_head) do
-  if (pellet == snake_head)
-    state
-    |> grow_snake()
-    |> place_pellet()
-  else
-    state
-  end
+def maybe_eat_pellet(state = %{pellet: pellet}, snake_head) when pellet == snake_head do
+  state
+  |> grow_snake()
+  |> place_pellet()
 end
+
+def maybe_eat_pellet(state, _snake_head), do: state
 
 def grow_snake(state = %{%{snake: %{size: size}}) do
   put_in(state, [:snake, :has_eaten], true)
@@ -104,11 +105,6 @@ def place_pellet(state = %{width: width, height: height, snake: %{body: snake_bo
 end
 ```
 
-Let's take a look to these two new functions:
-
-- `grow_snake/1` simply sets the `:has_eatan` flag to true in the state
-- `place_pellet/1` computes a new pair of coordinates for the food. If the new value matches any tile in the snake's body, it recursively generate a new position until it does not overlap any more.
-
 We still need to update the `move_snake/1` function to use the `:has_eatan` flag.
 
 ```elixir
@@ -126,7 +122,7 @@ defp move_snake(%{snake: snake} = state) do
 
   state
   |> put_in([:snake, :body], new_body)
-  |> maybe_eat_food(new_head)
+  |> maybe_eat_pellet(new_head)
 end
 ```
 
@@ -154,7 +150,7 @@ defp move_snake(%{snake: snake} = state) do
   state
   |> put_in([:snake, :body], new_body)
   |> put_in([:snake, :has_eaten], false) # Reset the `:has_eaten` flag before the next check
-  |> maybe_eat_food(new_head)
+  |> maybe_eat_pellet(new_head)
 end
 ```
 
