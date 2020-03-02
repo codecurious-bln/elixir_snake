@@ -1,10 +1,10 @@
 ### 6. Allow snake to eat
 
-We have the food, but our snake can't eat it yet, and we don't want to starve our little friend.
+We have the food! But our snake can't eat it yet and we don't want to starve our little friend 🙀
 
-The goal of this chapter is to allow the snake to eat the food and grow, but let's first quickly recap how it works. The snake eats the food when it overlaps it with its head, as soon the snake eats it, it will grow of one unit (a new tile will be appended to its body) and a new food pellet will be placed in the snake world.
+The goal of this chapter is to allow the snake to eat the food and grow. Let's quickly recap how it works: The snake "eats" the food when it overlaps it with its head. As soon the snake has eaten, it grows by one unit (a new tile will be appended to its body) and a new food pellet will be placed somewhere in the game.
 
-In other words, we need to check if the snake's head has the same coordinates of the pellet after every movement. The function `move_snake/1` looks the natural place where to execute this check.
+To achieve this, we'll check whether the snake's head has the same coordinates as the pellet. As we need to perform this check again after every movement, the `move_snake/1` function looks like a good place this.
 
 ```elixir
 defp move_snake(%{snake: snake} = state) do
@@ -31,10 +31,7 @@ Our new function `maybe_eat_food/2` receives:
 - The current state as 1st argument
 - The snake's head coordinates as 2nd argument
 
-Then, in the case the snake's head overlaps the food pellet, the function will take care of:
-
-- Grow the snake body of one unit
-- Place a new food pellet in the snake world
+If the snake's head overlaps the food pellet, we grow its body by one unit and place a new pellet somewhere in the game.
 
 or otherwise, just return the current state without any changes.
 
@@ -52,11 +49,13 @@ def maybe_eat_pellet(state = %{pellet: pellet}, snake_head) do
 end
 ```
 
-Growing the snake body can be tricky, let's explore all our alternatives.
+Growing the snake's body can be tricky. Let's explore some possibilities:
 
-Prepending a new tile to the snake head is not a feasible solution because it will potentially lead to unexpected outcome like its dead :skull:.
+Prepending a new tile before the snake's head is not feasible. It could lead to unexpected outcome: the snake hits its tail and dies ☠️
 
-The most natural approach is to append a new tile at the end of the snake body, but how exactly? We can not simply add a new tile at the end like: `Enum.concat(body, [{x, y}])` since we don't have any information of the tail direction but only of its head. In other words, we can't infer the coordinates (`{x, y}`) of the tile to append. The only way to safely grow our snake it's to preserve its body when the snake ate the pellet. We could set a boolean flag `has_eaten` in the state and in the next game tick, don't delete the last snake's body tile when this flag is true 🤓.
+The most natural approach is appending a new tile to the end of the body. But how? We can't append a tile with `Enum.concat(body, [{x, y}])`. We can't infer the coordinates (`{x, y}`) for the new tile, since we don't know the tail's direction. We only know where the head is moving.
+
+The only way to safely grow our snake its to preserve its body when it ate the pellet. We can set a boolean flag `has_eaten` in the state and on the next tick not delete the last body tile if is set to `true` 🤓. This will naturally grow our snake by one tile.
 
 Remember, we set a timer at the beginning in out `init/1` function that periodically sends a message, which is intercepted by our `handle_info/2`, which in turn calls the `move_snake/1` function. That's our game tick.
 
@@ -108,7 +107,7 @@ end
 Let's take a look to these two new functions:
 
 - `grow_snake/1` simply sets the `:has_eatan` flag to true in the state
-- `place_pellet/1` computes a new pair of coordinates for the food, if the new value matches any tile in the snake's body, it recursively generate a new position until it does not overlap the snake
+- `place_pellet/1` computes a new pair of coordinates for the food. If the new value matches any tile in the snake's body, it recursively generate a new position until it does not overlap any more.
 
 We still need to update the `move_snake/1` function to use the `:has_eatan` flag.
 
@@ -131,7 +130,7 @@ defp move_snake(%{snake: snake} = state) do
 end
 ```
 
-Like that, when the flag `:has_eatan` is true, the last tile from the snake's body is not removed anymore. This is the trick that allows us to grow the snake 💪
+When `:has_eaten` is true, the last tile from the snake's body is **not** removed. This is the trick that allows us to grow the snake 💪
 
 And now let's run the game and see how if our snake grows when eating.
 
@@ -154,7 +153,7 @@ defp move_snake(%{snake: snake} = state) do
 
   state
   |> put_in([:snake, :body], new_body)
-  |> put_in([::snake, :has_eaten], false) # Reset the `:has_eaten` flag before the next check
+  |> put_in([:snake, :has_eaten], false) # Reset the `:has_eaten` flag before the next check
   |> maybe_eat_food(new_head)
 end
 ```
