@@ -197,10 +197,10 @@ Let's start by changing the default background of the scene from black to a more
 
 Nice! We are already getting that 90s feeling!
 
-The first object we want to draw on our scene is the snake. We'll define it as an ordered list of x and y coordinate pairs corresponding to the locations of the cells in the grid the snake is currently occupying. We'll refer to this as the "body" of the snake. In addition to that, we'll also add information about the current "size" of the snake. That should be enough to be able to draw the snake onto the scene:
+The first object we want to draw on our scene is the snake. We'll define it as an ordered list of x and y coordinate pairs corresponding to the locations of the cells in the grid the snake is currently occupying. We'll refer to this as the "body" of the snake. That should be enough to be able to draw the snake onto the scene:
 
 ```elixir
-snake = %{body: [{9, 9}], size: 1}
+snake = %{body: [{9, 9}]}
 ```
 
 In order to actually draw it onto the scene, we need to add it to the graph of our scene. So let's update our initial graph and add our snake object to it.
@@ -211,7 +211,7 @@ state = %{
   height: number_of_rows
 }
 
-snake = %{body: [{9, 9}], size: 1}
+snake = %{body: [{9, 9}, {10, 9}, {11, 9}]}
 
 graph = draw_object(@graph, snake)
 
@@ -248,7 +248,7 @@ Now we have the first objects in our graph. Let's see how this looks like!
 Our snake does not look too snaky yet if it's that short. Let's change that and make it occupy three tiles:
 
 ```elixir
-snake = %{body: [{9, 9}, {10, 9}, {11, 9}], size: 3}
+snake = %{body: [{9, 9}, {10, 9}, {11, 9}]}
 ```
 
 ![snake of 3 tiles on game screen](./../images/03-three-tile-snake.png)

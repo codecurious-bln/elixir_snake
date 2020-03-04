@@ -1,4 +1,4 @@
-defmodule Snake.Scene.Game4 do
+defmodule Snake.Scene.Legacy.Game5 do
   use Scenic.Scene
 
   import Scenic.Primitives, only: [rrect: 3, text: 3]
@@ -92,12 +92,45 @@ defmodule Snake.Scene.Game4 do
 
     state
     |> put_in([:objects, :snake, :body], new_body)
+    |> maybe_eat_pellet(new_head)
   end
 
   defp move(%{width: w, height: h}, {pos_x, pos_y}, {vec_x, vec_y}) do
     x = rem(pos_x + vec_x + w, w)
     y = rem(pos_y + vec_y + h, h)
     {x, y}
+  end
+
+  def maybe_eat_pellet(state = %{objects: %{pellet: pellet}}, snake_head) when pellet == snake_head do
+    state
+    |> grow_snake()
+    |> place_pellet()
+    |> update_score()
+  end
+
+  def maybe_eat_pellet(state, _) do
+    state
+  end
+
+  def grow_snake(state = %{objects: %{snake: %{size: size}}}) do
+    put_in(state, [:objects, :snake, :size], size + 1)
+  end
+
+  def place_pellet(state = %{width: w, height: h, objects: %{snake: %{body: snake_body}}}) do
+    pellet_coords = {
+      Enum.random(0..(w - 1)),
+      Enum.random(0..(h - 1))
+    }
+
+    if pellet_coords in snake_body do
+      place_pellet(state)
+    else
+      put_in(state, [:objects, :pellet], pellet_coords)
+    end
+  end
+
+  def update_score(state = %{score: score}) do
+    %{state | score: score + 100}
   end
 
   #

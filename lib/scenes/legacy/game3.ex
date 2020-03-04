@@ -1,4 +1,4 @@
-defmodule Snake.Scene.Game3 do
+defmodule Snake.Scene.Legacy.Game3 do
   use Scenic.Scene
 
   import Scenic.Primitives, only: [rrect: 3, text: 3]

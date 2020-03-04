@@ -1,4 +1,4 @@
-defmodule Snake.Scene.GameOriginal do
+defmodule Snake.Scene.Legacy.GameOriginal do
   use Scenic.Scene
   alias Scenic.Graph
   alias Scenic.ViewPort

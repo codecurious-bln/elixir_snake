@@ -1,4 +1,4 @@
-defmodule Snake.Scene.Game1 do
+defmodule Snake.Scene.Legacy.Game4 do
   use Scenic.Scene
 
   import Scenic.Primitives, only: [rrect: 3, text: 3]
@@ -36,17 +36,40 @@ defmodule Snake.Scene.Game1 do
       frame_timer: timer,
       score: 0,
       objects: %{
-        pellet: {5, 5}
+        pellet: {5, 5},
+        snake: %{body: [{9, 9}], size: 5, direction: {1, 0}}
       }
     }
 
     {:ok, state}
   end
 
+  # Keyboard controls
+  def handle_input({:key, {"left", :press, _}}, _context, state) do
+    {:noreply, update_snake_direction(state, {-1, 0})}
+  end
+
+  def handle_input({:key, {"right", :press, _}}, _context, state) do
+    {:noreply, update_snake_direction(state, {1, 0})}
+  end
+
+  def handle_input({:key, {"up", :press, _}}, _context, state) do
+    {:noreply, update_snake_direction(state, {0, -1})}
+  end
+
+  def handle_input({:key, {"down", :press, _}}, _context, state) do
+    {:noreply, update_snake_direction(state, {0, 1})}
+  end
+
+  def handle_input(_input, _context, state), do: {:noreply, state}
+
+  # Change the snake's current direction.
+  defp update_snake_direction(state, direction) do
+    put_in(state, [:objects, :snake, :direction], direction)
+  end
+
   def handle_info(:frame, %{frame_count: frame_count} = state) do
-    {pellet_x, pellet_y} = get_in(state, [:objects, :pellet])
-    new_pellet = {rem(pellet_x + 1, state.width), pellet_y}
-    state = put_in(state, [:objects, :pellet], new_pellet)
+    state = move_snake(state)
 
     graph =
       state.graph
@@ -54,6 +77,27 @@ defmodule Snake.Scene.Game1 do
       |> draw_game_objects(state.objects)
 
     {:noreply, %{state | frame_count: frame_count + 1}, push: graph}
+  end
+
+  # Move the snake to its next position according to the direction. Also limits the size.
+  defp move_snake(%{objects: %{snake: snake}} = state) do
+    %{body: body, size: size, direction: direction} = snake
+
+    # new head
+    [head | _] = body
+    new_head = move(state, head, direction)
+
+    # truncate body
+    new_body = Enum.take([new_head | body], size)
+
+    state
+    |> put_in([:objects, :snake, :body], new_body)
+  end
+
+  defp move(%{width: w, height: h}, {pos_x, pos_y}, {vec_x, vec_y}) do
+    x = rem(pos_x + vec_x + w, w)
+    y = rem(pos_y + vec_y + h, h)
+    {x, y}
   end
 
   #
@@ -75,6 +119,13 @@ defmodule Snake.Scene.Game1 do
   # Pellet is simply a coordinate pair
   defp draw_object(graph, :pellet, {x, y}) do
     draw_tile(graph, x, y, fill: :orange)
+  end
+
+  # Snake's body is a list of coordinate pairs
+  defp draw_object(graph, :snake, %{body: snake}) do
+    Enum.reduce(snake, graph, fn {x, y}, graph ->
+      draw_tile(graph, x, y, fill: :blue)
+    end)
   end
 
   # Draw tiles as rounded rectangles to look nice

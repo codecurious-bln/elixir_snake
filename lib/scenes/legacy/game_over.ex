@@ -1,4 +1,4 @@
-defmodule Snake.Scene.GameOver do
+defmodule Snake.Scene.Legacy.GameOver do
   use Scenic.Scene
   alias Scenic.Graph
   alias Scenic.ViewPort

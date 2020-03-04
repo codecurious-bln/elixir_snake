@@ -9,6 +9,7 @@ To add this aspect to our currently static game scene, we need to periodically u
 ```elixir
 @graph Graph.build(clear_color: :dark_sea_green)
 @tile_size 32
+@tile_radius 8
 @frame_ms 192
 
 def init(_arg, opts) do

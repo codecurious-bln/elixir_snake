@@ -1,4 +1,4 @@
-defmodule Snake.Scene.Game2 do
+defmodule Snake.Scene.Legacy.Game1 do
   use Scenic.Scene
 
   import Scenic.Primitives, only: [rrect: 3, text: 3]
@@ -36,8 +36,7 @@ defmodule Snake.Scene.Game2 do
       frame_timer: timer,
       score: 0,
       objects: %{
-        pellet: {5, 5},
-        snake: %{body: [{9, 9}], size: 5, direction: {1, 0}}
+        pellet: {5, 5}
       }
     }
 
@@ -45,7 +44,9 @@ defmodule Snake.Scene.Game2 do
   end
 
   def handle_info(:frame, %{frame_count: frame_count} = state) do
-    state = move_snake(state)
+    {pellet_x, pellet_y} = get_in(state, [:objects, :pellet])
+    new_pellet = {rem(pellet_x + 1, state.width), pellet_y}
+    state = put_in(state, [:objects, :pellet], new_pellet)
 
     graph =
       state.graph
@@ -53,14 +54,6 @@ defmodule Snake.Scene.Game2 do
       |> draw_game_objects(state.objects)
 
     {:noreply, %{state | frame_count: frame_count + 1}, push: graph}
-  end
-
-  # Move the snake to its next position according to the direction. Also limits the size.
-  defp move_snake(%{objects: %{snake: snake}} = state) do
-    state
-  end
-
-  defp move(%{width: w, height: h}, {pos_x, pos_y}, {vec_x, vec_y}) do
   end
 
   #
@@ -82,13 +75,6 @@ defmodule Snake.Scene.Game2 do
   # Pellet is simply a coordinate pair
   defp draw_object(graph, :pellet, {x, y}) do
     draw_tile(graph, x, y, fill: :orange)
-  end
-
-  # Snake's body is a list of coordinate pairs
-  defp draw_object(graph, :snake, %{body: snake}) do
-    Enum.reduce(snake, graph, fn {x, y}, graph ->
-      draw_tile(graph, x, y, fill: :blue)
-    end)
   end
 
   # Draw tiles as rounded rectangles to look nice
