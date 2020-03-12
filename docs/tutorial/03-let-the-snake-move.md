@@ -26,7 +26,7 @@ def init(_arg, opts) do
   }
 
   snake = %{body: [{11, 9}, {10, 9}, {9, 9}]}
-  graph = draw_object(@graph, snake)
+  graph = draw_snake(@graph, snake)
 
   # start timer
   {:ok, _timer} = :timer.send_interval(@frame_ms, :frame)
@@ -61,10 +61,10 @@ state = %{
 }
 ```
 
-We'll also turn our `draw_object/2` function into a `draw_objects/2` function. Instead of just the snake object, we'll pass the whole state as the second argument.
+We'll also need to adapt our `draw_snake/2` function to pattern match on the whole state as argument instead of just the snake object.
 
 ```elixir
-defp draw_objects(graph, %{snake: %{body: body}}) do
+defp draw_snake(graph, %{snake: %{body: body}}) do
   Enum.reduce(body, graph, fn {x, y}, graph ->
     draw_tile(graph, x, y, fill: :dark_slate_gray)
   end)
@@ -136,7 +136,7 @@ The next step will be to update our `handle_info/2` callback with the function w
 ```elixir
 def handle_info(:frame, state) do
   new_state = move_snake(state)
-  graph = draw_objects(@graph, new_state)
+  graph = draw_snake(@graph, new_state)
 
   {:noreply, new_state, push: graph}
 end

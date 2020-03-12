@@ -213,17 +213,17 @@ state = %{
 
 snake = %{body: [{9, 9}, {10, 9}, {11, 9}]}
 
-graph = draw_object(@graph, snake)
+graph = draw_snake(@graph, snake)
 
 {:ok, state, push: graph}
 ```
 
-To keep things organized, we'll implement our own `draw_object/2` helper function which will turn our abstract snake object into actual drawable objects for Scenic. The function takes two arguments: the graph and our snake object.
+To keep things organized, we'll implement our own `draw_snake/2` helper function which will turn our abstract snake object into actual drawable objects for Scenic. The function takes two arguments: the graph and our snake object.
 
 For each square of the snake's body, we fill a cell on our grid.
 
 ```elixir
-defp draw_object(graph, %{body: snake}) do
+defp draw_snake(graph, %{body: snake}) do
   Enum.reduce(snake, graph, fn {x, y}, graph ->
     draw_tile(graph, x, y, fill: :dark_slate_gray)
   end)
