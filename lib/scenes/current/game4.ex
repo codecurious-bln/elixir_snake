@@ -34,7 +34,7 @@ defmodule Snake.Scene.Game4 do
 
   def handle_info(:frame, state) do
     new_state = move_snake(state)
-    graph = draw_objects(@graph, new_state)
+    graph = draw_snake(@graph, new_state)
 
     {:noreply, new_state, push: graph}
   end
@@ -62,7 +62,7 @@ defmodule Snake.Scene.Game4 do
     {x, y}
   end
 
-  defp draw_objects(graph, %{snake: %{body: body}}) do
+  defp draw_snake(graph, %{snake: %{body: body}}) do
     Enum.reduce(body, graph, fn {x, y}, graph ->
       draw_tile(graph, x, y, fill: :dark_slate_gray)
     end)

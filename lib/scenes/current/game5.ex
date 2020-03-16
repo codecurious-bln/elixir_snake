@@ -1,5 +1,5 @@
-# Game at the end of Chapter 3
-defmodule Snake.Scene.Game3 do
+# Game at the end of Chapter 5
+defmodule Snake.Scene.Game5 do
   use Scenic.Scene
 
   import Scenic.Primitives, only: [rounded_rectangle: 3]
@@ -23,7 +23,10 @@ defmodule Snake.Scene.Game3 do
     state = %{
       width: number_of_columns,
       height: number_of_rows,
-      snake: %{body: [{9, 9}, {10, 9}, {11, 9}], direction: {1, 0}}
+      objects: %{
+        pellet: {5, 5},
+        snake: %{body: [{9, 9}, {10, 9}, {11, 9}], direction: {1, 0}}
+      }
     }
 
     # start timer
@@ -34,12 +37,12 @@ defmodule Snake.Scene.Game3 do
 
   def handle_info(:frame, state) do
     new_state = move_snake(state)
-    graph = draw_snake(@graph, new_state)
+    graph = @graph |> draw_objects(new_state.objects)
 
     {:noreply, new_state, push: graph}
   end
 
-  defp move_snake(%{snake: snake} = state) do
+  defp move_snake(%{objects: %{snake: snake}} = state) do
     %{body: body, direction: direction} = snake
 
     # new head's position
@@ -51,7 +54,7 @@ defmodule Snake.Scene.Game3 do
     new_body = List.delete_at([new_head | body], -1)
 
     state
-    |> put_in([:snake, :body], new_body)
+    |> put_in([:objects, :snake, :body], new_body)
   end
 
   defp move(%{width: w, height: h}, {pos_x, pos_y}, {vec_x, vec_y}) do
@@ -62,7 +65,19 @@ defmodule Snake.Scene.Game3 do
     {x, y}
   end
 
-  defp draw_snake(graph, %{snake: %{body: body}}) do
+  defp draw_objects(graph, objects) do
+    Enum.reduce(objects, graph, fn {type, object}, graph ->
+      draw_object(graph, type, object)
+    end)
+  end
+
+  # Pellet is simply a coordinate pair
+  defp draw_object(graph, :pellet, {x, y}) do
+    draw_tile(graph, x, y, fill: :orange)
+  end
+
+  # Snake's body is a list of coordinate pairs
+  defp draw_object(graph, :snake, %{body: body}) do
     Enum.reduce(body, graph, fn {x, y}, graph ->
       draw_tile(graph, x, y, fill: :dark_slate_gray)
     end)
@@ -72,5 +87,30 @@ defmodule Snake.Scene.Game3 do
   defp draw_tile(graph, x, y, opts) do
     tile_opts = Keyword.merge([fill: :black, translate: {x * @tile_size, y * @tile_size}], opts)
     rounded_rectangle(graph, {@tile_size, @tile_size, @tile_radius}, tile_opts)
+  end
+
+  # Keyboard controls
+  def handle_input({:key, {"left", :press, _}}, _context, state) do
+    {:noreply, update_snake_direction(state, {-1, 0})}
+  end
+
+  def handle_input({:key, {"right", :press, _}}, _context, state) do
+    {:noreply, update_snake_direction(state, {1, 0})}
+  end
+
+  def handle_input({:key, {"up", :press, _}}, _context, state) do
+    {:noreply, update_snake_direction(state, {0, -1})}
+  end
+
+  def handle_input({:key, {"down", :press, _}}, _context, state) do
+    {:noreply, update_snake_direction(state, {0, 1})}
+  end
+
+  # Ignore all the other inputs
+  def handle_input(_input, _context, state), do: {:noreply, state}
+
+  # Change the snake's current direction.
+  defp update_snake_direction(state, direction) do
+    put_in(state, [:objects, :snake, :direction], direction)
   end
 end

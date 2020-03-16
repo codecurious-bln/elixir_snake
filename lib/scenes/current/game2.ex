@@ -26,12 +26,12 @@ defmodule Snake.Scene.Game2 do
 
     snake = %{body: [{9, 9}, {10, 9}, {11, 9}]}
 
-    graph = draw_object(@graph, snake)
+    graph = draw_snake(@graph, snake)
 
     {:ok, state, push: graph}
   end
 
-  defp draw_object(graph, %{body: snake}) do
+  defp draw_snake(graph, %{body: snake}) do
     Enum.reduce(snake, graph, fn {x, y}, graph ->
       draw_tile(graph, x, y, fill: :dark_slate_gray)
     end)
