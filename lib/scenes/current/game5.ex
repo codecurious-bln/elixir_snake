@@ -23,8 +23,10 @@ defmodule Snake.Scene.Game5 do
     state = %{
       width: number_of_columns,
       height: number_of_rows,
-      pellet: {5, 5},
-      snake: %{body: [{9, 9}, {10, 9}, {11, 9}], direction: {1, 0}}
+      objects: %{
+        pellet: {5, 5},
+        snake: %{body: [{9, 9}, {10, 9}, {11, 9}], direction: {1, 0}}
+      }
     }
 
     # start timer
@@ -35,15 +37,12 @@ defmodule Snake.Scene.Game5 do
 
   def handle_info(:frame, state) do
     new_state = move_snake(state)
-    # graph = draw_game_objects(@graph, new_state)
-    graph = @graph
-    |> draw_snake(new_state)
-    |> draw_pellet(new_state)
+    graph = @graph |> draw_objects(new_state.objects)
 
     {:noreply, new_state, push: graph}
   end
 
-  defp move_snake(%{snake: snake} = state) do
+  defp move_snake(%{objects: %{snake: snake}} = state) do
     %{body: body, direction: direction} = snake
 
     # new head's position
@@ -55,7 +54,7 @@ defmodule Snake.Scene.Game5 do
     new_body = List.delete_at([new_head | body], -1)
 
     state
-    |> put_in([:snake, :body], new_body)
+    |> put_in([:objects, :snake, :body], new_body)
   end
 
   defp move(%{width: w, height: h}, {pos_x, pos_y}, {vec_x, vec_y}) do
@@ -66,29 +65,23 @@ defmodule Snake.Scene.Game5 do
     {x, y}
   end
 
+  defp draw_objects(graph, objects) do
+    Enum.reduce(objects, graph, fn {type, object}, graph ->
+      draw_object(graph, type, object)
+    end)
+  end
+
   # Pellet is simply a coordinate pair
-  defp draw_pellet(graph, %{pellet: {x, y}}) do
+  defp draw_object(graph, :pellet, {x, y}) do
     draw_tile(graph, x, y, fill: :orange)
   end
 
   # Snake's body is a list of coordinate pairs
-  defp draw_snake(graph, %{snake: %{body: body}}) do
+  defp draw_object(graph, :snake, %{body: body}) do
     Enum.reduce(body, graph, fn {x, y}, graph ->
       draw_tile(graph, x, y, fill: :dark_slate_gray)
     end)
   end
-
-  # # Pellet is simply a coordinate pair
-  # defp draw_object(graph, :pellet, {x, y}) do
-  #   draw_tile(graph, x, y, fill: :orange)
-  # end
-
-  # # Snake's body is a list of coordinate pairs
-  # defp draw_object(graph, :snake, %{body: body}) do
-  #   Enum.reduce(body, graph, fn {x, y}, graph ->
-  #     draw_tile(graph, x, y, fill: :dark_slate_gray)
-  #   end)
-  # end
 
   # draw tiles as rounded rectangles to look nice
   defp draw_tile(graph, x, y, opts) do
@@ -118,6 +111,6 @@ defmodule Snake.Scene.Game5 do
 
   # Change the snake's current direction.
   defp update_snake_direction(state, direction) do
-    put_in(state, [:snake, :direction], direction)
+    put_in(state, [:objects, :snake, :direction], direction)
   end
 end
